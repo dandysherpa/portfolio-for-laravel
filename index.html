@@ -182,161 +182,143 @@
         body.light .hero-eyebrow { border-color:rgba(0,0,0,0.12);background:rgba(0,0,0,0.04); }
 
         /* ═══════════════════════════════════════
-           LOADER
+           RESPONSIVE FIXES
+        ═══════════════════════════════════════ */
+
+        /* Container base padding so it never bleeds edge-to-edge */
+        .container { padding-left: 1.25rem; padding-right: 1.25rem; }
+        @media (min-width: 640px)  { .container { padding-left: 2rem; padding-right: 2rem; } }
+        @media (min-width: 1024px) { .container { padding-left: 2.5rem; padding-right: 2.5rem; } }
+
+        /* Nav brand scales down on mobile */
+        .nav-brand h1 { font-size: clamp(1.75rem, 7vw, 3.125rem); }
+
+        /* Theme toggle: move left on small screens so it doesn't clash with burger */
+        @media (max-width: 767px) {
+            #theme-toggle { top: auto; bottom: 1.25rem; right: 1.25rem; }
+        }
+
+        /* Hero section: clip overflow on mobile to stop orbs causing horizontal scroll */
+        .hero-section-wrap { overflow: hidden; }
+
+        /* Hero orbs: scale down and reposition on mobile */
+        @media (max-width: 639px) {
+            .hero-bg-orb:nth-child(1) { width: 260px !important; height: 260px !important; top: -60px !important; left: -80px !important; }
+            .hero-bg-orb:nth-child(2) { width: 180px !important; height: 180px !important; bottom: -30px !important; right: -50px !important; }
+        }
+
+        /* Hero stats row: tighter gap on tiny screens */
+        .hero-stats-row { gap: clamp(1rem, 5vw, 2rem); }
+
+        /* Hero image: smaller on very small phones */
+        @media (max-width: 400px) {
+            .hero-img { width: 11rem !important; height: 14rem !important; }
+        }
+
+        /* Hero rings: hide outermost two rings on mobile (they overflow) */
+        @media (max-width: 639px) {
+            .hero-ring:nth-child(2),
+            .hero-ring:nth-child(3) { display: none; }
+        }
+
+        /* Skills heading: smaller on mobile */
+        .skills-heading { font-size: clamp(1.5rem, 5vw, 2.25rem); }
+
+        /* Card grid: never let cards be narrower than 260px */
+        .skills-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+
+        /* Card 3 span fix: on sm it spans 2 cols only if there are 2 cols */
+        @media (min-width: 640px) and (max-width: 1023px) {
+            #skill-card-3 { grid-column: span 2; }
+        }
+        @media (max-width: 639px) {
+            #skill-card-3 { grid-column: span 1; }
+        }
+
+        /* Footer marquee: scale font down on mobile */
+        .footer-marquee span { font-size: clamp(2rem, 8vw, 4.5rem); }
+        @media (max-width: 639px) {
+            .footer-marquee { gap: 1.5rem; }
+        }
+
+        /* Footer brand + links: stack better on tiny screens */
+        @media (max-width: 400px) {
+            .footer-brand { font-size: 1.1rem; }
+            .footer-links-list { gap: 0.75rem; font-size: 0.75rem; }
+        }
+
+        /* Social icons row: tighter on small screens */
+        @media (max-width: 400px) {
+            .footer-social-row { gap: 1.25rem; }
+            .footer-social svg { width: 1.35rem; height: 1.35rem; }
+        }
+
+        /* Loader progress bar: full width on very small screens */
+        #loader-bar-wrap { width: min(280px, 70vw); }
+
+        /* Disable hover-only effects on touch devices (prevents sticky hover state) */
+        @media (hover: none) {
+            .skill-card:hover .banner-img { transform: none; }
+            .skill-card:hover .card-border-chase::before { animation-play-state: paused; opacity: 0; }
+            .skill-card:hover .card-scanline { opacity: 0; animation: none; }
+            .skill-card:hover .card-orb { opacity: 0; }
+            .skill-card:hover .card-title-glitch::before,
+            .skill-card:hover .card-title-glitch::after { animation: none; opacity: 0; }
+            .nav-links-item:hover::after { width: 0; }
+        }
+
+        /* ═══════════════════════════════════════
+           LOADER — simple & funny
         ═══════════════════════════════════════ */
         #loader {
             position: fixed; inset: 0; z-index: 99999;
             background: #0a0a0a;
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
-            overflow: hidden;
+            gap: 1.5rem;
         }
 
-        /* Grid of tiny squares that flash */
-        #loader-grid {
-            position: absolute; inset: 0;
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            grid-template-rows: repeat(8, 1fr);
-            pointer-events: none;
-        }
-        .loader-cell {
-            border: 0.5px solid rgba(255,255,255,0.03);
-            background: transparent;
-            transition: background 0.1s;
+        /* The bouncing emoji */
+        #loader-emoji {
+            font-size: clamp(3rem, 10vw, 5rem);
+            display: block;
+            filter: drop-shadow(0 0 20px rgba(255,90,48,0.4));
         }
 
-        /* Corner brackets */
-        .loader-bracket {
-            position: absolute; width: 36px; height: 36px;
-            opacity: 0;
-        }
-        .loader-bracket::before, .loader-bracket::after {
-            content: ''; position: absolute; background: #ff5a30;
-        }
-        .loader-bracket::before { width: 100%; height: 2px; top: 0; }
-        .loader-bracket::after  { width: 2px; height: 100%; top: 0; }
-        .loader-bracket.tl { top: 32px; left: 32px; }
-        .loader-bracket.tl::before { left: 0; }
-        .loader-bracket.tl::after  { left: 0; }
-        .loader-bracket.tr { top: 32px; right: 32px; transform: scaleX(-1); }
-        .loader-bracket.bl { bottom: 32px; left: 32px; transform: scaleY(-1); }
-        .loader-bracket.br { bottom: 32px; right: 32px; transform: scale(-1,-1); }
-
-        /* Scanning line */
-        #loader-scanline {
-            position: absolute; left: 0; right: 0; height: 1px;
-            background: linear-gradient(90deg, transparent 0%, #ff5a30 40%, rgba(255,255,255,0.6) 50%, #ff5a30 60%, transparent 100%);
-            top: 0; opacity: 0;
-            box-shadow: 0 0 12px #ff5a30;
+        /* Funny rotating messages */
+        #loader-msg {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+            color: rgba(255,255,255,0.45);
+            letter-spacing: 0.05em;
+            text-align: center;
+            min-height: 1.4em;
+            padding: 0 1.5rem;
         }
 
-        /* Centre logo wordmark */
-        #loader-logo {
-            position: relative; z-index: 2;
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(3rem, 8vw, 5.5rem);
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            color: white;
-            line-height: 1;
-            opacity: 0;
-            overflow: hidden;
-        }
-        #loader-logo .accent { color: #ff5a30; }
-
-        /* Glitch layers on logo */
-        #loader-logo::before, #loader-logo::after {
-            content: attr(data-text);
-            position: absolute; top: 0; left: 0; right: 0;
-            font-family: 'Syne', sans-serif;
-            font-size: inherit; font-weight: 800;
-            white-space: nowrap; overflow: hidden;
-        }
-        #loader-logo::before {
-            color: #ff5a30; clip-path: inset(30% 0 40% 0);
-            transform: translateX(-3px);
-            animation: loaderGlitch1 0.5s steps(2) infinite;
-        }
-        #loader-logo::after {
-            color: #00d4ff; clip-path: inset(60% 0 20% 0);
-            transform: translateX(3px);
-            animation: loaderGlitch2 0.5s steps(2) 0.1s infinite;
-        }
-        @keyframes loaderGlitch1 {
-            0%,100% { clip-path:inset(30% 0 40% 0); transform:translateX(-3px); }
-            25%      { clip-path:inset(10% 0 70% 0); transform:translateX(2px); }
-            50%      { clip-path:inset(60% 0 10% 0); transform:translateX(-4px); }
-            75%      { clip-path:inset(80% 0 5% 0);  transform:translateX(3px); }
-        }
-        @keyframes loaderGlitch2 {
-            0%,100% { clip-path:inset(60% 0 20% 0); transform:translateX(3px); }
-            33%      { clip-path:inset(20% 0 60% 0); transform:translateX(-2px); }
-            66%      { clip-path:inset(45% 0 35% 0); transform:translateX(4px); }
-        }
-
-        /* Progress bar */
+        /* Thin progress bar */
         #loader-bar-wrap {
-            position: relative; z-index: 2;
-            width: min(340px, 70vw);
+            width: min(280px, 70vw);
             height: 2px;
             background: rgba(255,255,255,0.08);
             border-radius: 99px;
-            margin-top: 2rem;
             overflow: hidden;
-            opacity: 0;
         }
         #loader-bar {
             height: 100%; width: 0%;
-            background: linear-gradient(90deg, #ff5a30, #ff8c66);
+            background: #ff5a30;
             border-radius: 99px;
-            box-shadow: 0 0 10px #ff5a30;
-            transition: width 0.05s linear;
-        }
-        #loader-bar::after {
-            content: ''; position: absolute;
-            right: 0; top: -3px; width: 8px; height: 8px;
-            border-radius: 50%; background: #fff;
             box-shadow: 0 0 8px #ff5a30;
         }
 
-        /* Percentage counter + status text */
+        /* Tiny pct label */
         #loader-pct {
-            position: relative; z-index: 2;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.4);
-            margin-top: 1rem;
-            letter-spacing: 0.1em;
-            opacity: 0;
-        }
-        #loader-pct span { color: #ff5a30; font-weight: 500; }
-
-        /* Status messages */
-        #loader-status {
-            position: relative; z-index: 2;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: rgba(255,255,255,0.2);
-            margin-top: 0.5rem;
-            letter-spacing: 0.08em;
-            opacity: 0;
-            min-height: 1.2em;
+            letter-spacing: 0.12em;
         }
-
-        /* Decorative floating particles */
-        .loader-particle {
-            position: absolute; border-radius: 50%;
-            background: #ff5a30; pointer-events: none; opacity: 0;
-        }
-
-        /* Wipe panels for exit */
-        .loader-wipe {
-            position: absolute; inset-block: 0;
-            background: #0a0a0a; width: 0%;
-        }
-        .loader-wipe.left  { left: 0; }
-        .loader-wipe.right { right: 0; }
+        #loader-pct b { color: #ff5a30; font-weight: 500; }
 
         /* Keep site hidden during load */
         body.loading header,
@@ -349,41 +331,10 @@
 
     <!-- ===== LOADER ===== -->
     <div id="loader">
-
-        <!-- Cell grid background -->
-        <div id="loader-grid"></div>
-
-        <!-- Scan line -->
-        <div id="loader-scanline"></div>
-
-        <!-- Corner brackets -->
-        <div class="loader-bracket tl"></div>
-        <div class="loader-bracket tr"></div>
-        <div class="loader-bracket bl"></div>
-        <div class="loader-bracket br"></div>
-
-        <!-- Floating ambient particles -->
-        <div class="loader-particle" style="width:6px;height:6px;top:20%;left:15%;"></div>
-        <div class="loader-particle" style="width:4px;height:4px;top:70%;left:80%;"></div>
-        <div class="loader-particle" style="width:5px;height:5px;top:35%;left:85%;"></div>
-        <div class="loader-particle" style="width:3px;height:3px;top:80%;left:20%;"></div>
-        <div class="loader-particle" style="width:7px;height:7px;top:55%;left:50%;"></div>
-
-        <!-- Logo -->
-        <div id="loader-logo" data-text="PORTfolio">PORT<span class="accent">folio</span></div>
-
-        <!-- Progress -->
-        <div id="loader-bar-wrap">
-            <div id="loader-bar"></div>
-        </div>
-
-        <!-- Text -->
-        <div id="loader-pct">LOADING <span id="loader-num">0</span>%</div>
-        <div id="loader-status">Initialising...</div>
-
-        <!-- Exit wipe panels -->
-        <div class="loader-wipe left"></div>
-        <div class="loader-wipe right"></div>
+        <span id="loader-emoji">👨‍💻</span>
+        <div id="loader-msg">warming up the coffee machine...</div>
+        <div id="loader-bar-wrap"><div id="loader-bar"></div></div>
+        <div id="loader-pct"><b id="loader-num">0</b>%</div>
     </div>
 
     <!-- ===== HEADER ===== -->
@@ -427,6 +378,7 @@
     <!-- ===== MAIN ===== -->
     <main>
         <!-- ===== HERO ===== -->
+        <div class="hero-section-wrap">
         <section class="container relative mt-16 flex flex-col-reverse md:flex-row items-center gap-12 pb-24" style="overflow:visible;">
 
             <!-- Ambient orbs -->
@@ -466,7 +418,7 @@
                 </div>
 
                 <!-- Stats -->
-                <div class="flex gap-8 justify-center md:justify-start">
+                <div class="hero-stats-row flex justify-center md:justify-start">
                     <div class="hero-stat text-center md:text-left">
                         <div class="text-2xl font-bold text-white font-mono stat-num" data-target="2">0</div>
                         <div class="text-xs text-white/40 tracking-wide uppercase mt-0.5">Years exp.</div>
@@ -501,17 +453,18 @@
                 <div class="scroll-dot"></div>
             </div>
         </section>
+        </div><!-- end hero-section-wrap -->
 
         <!-- ===== SKILLS ===== -->
         <section id="skills" class="container pb-28">
             <div class="mb-12 text-center md:text-left">
                 <p class="section-label font-mono text-[11px] tracking-widest text-white/30 uppercase mb-2">Tech Stack</p>
-                <h2 class="skills-heading text-3xl sm:text-4xl font-bold text-white">
+                <h2 class="skills-heading font-bold text-white">
                     Skills &amp; <span class="text-[#ff5a30]">Expertise</span>
                 </h2>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="skills-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
                 <!-- Card 1: Laravel -->
                 <div class="skill-card group cursor-pointer relative" id="skill-card-1">
@@ -675,7 +628,7 @@
         <div class="container py-10 relative z-10">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
                 <h2 class="footer-brand brand text-2xl font-bold cursor-pointer select-none">SYDNEY<span class="text-[#ff5a30]">2026</span></h2>
-                <ul class="flex flex-wrap gap-6 text-sm text-white/55">
+                <ul class="footer-links-list flex flex-wrap gap-6 text-sm text-white/55">
                     <li><a href="#" class="footer-link hover:text-[#ff5a30] transition-colors duration-200">Home</a></li>
                     <li><a href="#skills" class="footer-link hover:text-[#ff5a30] transition-colors duration-200">Skills</a></li>
                     <li><a href="#" class="footer-link hover:text-[#ff5a30] transition-colors duration-200">Projects</a></li>
@@ -686,7 +639,7 @@
             <div class="footer-divider-line my-6"></div>
 
             <!-- Social Icons -->
-            <div class="flex justify-center gap-8 mb-6">
+            <div class="footer-social-row flex justify-center gap-8 mb-6">
                 <a href="https://instagram.com/jiiigme" target="_blank" class="footer-social text-white/40 hover:text-[#ff5a30] transition-colors duration-200">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                 </a>
@@ -787,139 +740,84 @@
         })
 
         // ═══════════════════════════════════════
-        // LOADER
+        // LOADER — simple & funny
         // ═══════════════════════════════════════
         ;(function initLoader() {
-            const loader     = document.getElementById('loader')
-            const bar        = document.getElementById('loader-bar')
-            const numEl      = document.getElementById('loader-num')
-            const statusEl   = document.getElementById('loader-status')
-            const logoEl     = document.getElementById('loader-logo')
-            const barWrap    = document.getElementById('loader-bar-wrap')
-            const pctEl      = document.getElementById('loader-pct')
-            const scanline   = document.getElementById('loader-scanline')
-            const grid       = document.getElementById('loader-grid')
-            const brackets   = document.querySelectorAll('.loader-bracket')
-            const particles  = document.querySelectorAll('.loader-particle')
-            const wipeLeft   = document.querySelector('.loader-wipe.left')
-            const wipeRight  = document.querySelector('.loader-wipe.right')
+            const loader  = document.getElementById('loader')
+            const emoji   = document.getElementById('loader-emoji')
+            const msgEl   = document.getElementById('loader-msg')
+            const bar     = document.getElementById('loader-bar')
+            const numEl   = document.getElementById('loader-num')
 
-            const statusMessages = [
-                'Initialising framework...',
-                'Loading assets...',
-                'Compiling styles...',
-                'Mounting components...',
-                'Almost ready...',
-                'Launching...'
+            const jokes = [
+                'warming up the coffee machine...',
+                'bribing the CSS to behave...',
+                'Googling "how to center a div"...',
+                'deleting node_modules (again)...',
+                'telling PHP it is loved...',
+                'closing 47 Stack Overflow tabs...',
+                'running npm install for the 9th time...',
+                'pushing to main (yolo)...',
+                'hiding the console.logs...',
+                'it works on my machine™...',
             ]
 
-            // Build grid cells
-            for (let i = 0; i < 12 * 8; i++) {
-                const cell = document.createElement('div')
-                cell.className = 'loader-cell'
-                grid.appendChild(cell)
-            }
-            const cells = document.querySelectorAll('.loader-cell')
+            const emojis = ['👨‍💻','🤔','😅','☕','🚀','😎','🔥','✨','💀','🎉']
 
-            // Random cell flash loop
-            let flashInterval = setInterval(() => {
-                const cell = cells[Math.floor(Math.random() * cells.length)]
-                cell.style.background = `rgba(255,90,48,${0.04 + Math.random() * 0.08})`
-                setTimeout(() => { cell.style.background = 'transparent' }, 150 + Math.random() * 200)
-            }, 60)
-
-            // Floating particles idle
-            particles.forEach((p, i) => {
-                gsap.to(p, { opacity: 0.4 + Math.random() * 0.3, y: 'random(-20,20)', x: 'random(-15,15)',
-                    duration: 2 + i * 0.4, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: i * 0.3 })
+            // Bounce the emoji
+            gsap.to(emoji, {
+                y: -18, duration: 0.45,
+                repeat: -1, yoyo: true,
+                ease: 'power1.inOut'
             })
 
-            // Master loader timeline
-            const ltl = gsap.timeline()
+            // Cycle through jokes + matching emojis
+            let step = 0
+            const totalSteps = jokes.length
+            const stepDuration = 2200 / totalSteps  // total ~2.2s
 
-            // 1. Brackets slam in
-            ltl.to(brackets, { opacity: 1, duration: 0.04, stagger: 0.06 })
-               .from(brackets, { scale: 1.6, duration: 0.4, stagger: 0.06, ease: 'back.out(2)' }, '<')
-
-            // 2. Scan line sweeps down
-            ltl.to(scanline, { opacity: 1, duration: 0.1 }, '-=0.1')
-               .fromTo(scanline, { top: '0%' }, { top: '100%', duration: 0.7, ease: 'power1.inOut' }, '-=0.1')
-               .to(scanline, { opacity: 0, duration: 0.1 }, '-=0.1')
-
-            // 3. Logo slams in with glitch
-            ltl.to(logoEl, { opacity: 1, duration: 0.01 }, '-=0.05')
-               .from(logoEl, { scaleX: 1.4, scaleY: 0.3, duration: 0.35, ease: 'expo.out' }, '<')
-
-            // 4. Bar + text fade in
-            ltl.to([barWrap, pctEl, statusEl], { opacity: 1, y: 0, duration: 0.4, stagger: 0.08, ease: 'power2.out' }, '-=0.1')
-
-            // 5. Progress run — fake load 0→100 over ~2.2s
-            let progress = 0
-            let msgIndex = 0
-            const progressTl = gsap.timeline({ delay: ltl.duration() - 0.2 })
-            progressTl.to({}, {
-                duration: 2.2,
-                ease: 'power1.inOut',
-                onUpdate: function() {
-                    progress = Math.round(this.progress() * 100)
-                    bar.style.width = progress + '%'
-                    numEl.textContent = progress
-
-                    // Update status message at intervals
-                    const newMsgIndex = Math.floor(this.progress() * statusMessages.length)
-                    if (newMsgIndex !== msgIndex && newMsgIndex < statusMessages.length) {
-                        msgIndex = newMsgIndex
-                        gsap.fromTo(statusEl, { opacity: 0, y: 4 }, { opacity: 1, y: 0, duration: 0.25, ease: 'power2.out' })
-                        statusEl.textContent = statusMessages[msgIndex]
-                    }
-
-                    // Random cell flash burst at milestones
-                    if (progress % 25 === 0) {
-                        for (let i = 0; i < 8; i++) {
-                            const c = cells[Math.floor(Math.random() * cells.length)]
-                            c.style.background = `rgba(255,90,48,0.18)`
-                            setTimeout(() => { c.style.background = 'transparent' }, 250)
-                        }
-                    }
-                },
-                onComplete: exitLoader
-            })
-
-            // 6. Exit sequence
-            function exitLoader() {
-                clearInterval(flashInterval)
-
-                const exitTl = gsap.timeline({
+            function nextStep() {
+                if (step >= totalSteps) return
+                // Fade out current message
+                gsap.to(msgEl, {
+                    opacity: 0, y: -6, duration: 0.18, ease: 'power2.in',
                     onComplete: () => {
-                        loader.remove()
-                        document.body.classList.remove('loading')
-                        runPageTimeline()
+                        msgEl.textContent = jokes[step]
+                        emoji.textContent = emojis[step]
+                        gsap.to(msgEl, { opacity: 1, y: 0, duration: 0.22, ease: 'power2.out' })
+                        step++
+                        bar.style.width = (step / totalSteps * 100) + '%'
+                        numEl.textContent = Math.round(step / totalSteps * 100)
+                        if (step < totalSteps) setTimeout(nextStep, stepDuration)
+                        else setTimeout(exitLoader, stepDuration)
                     }
                 })
+            }
 
-                // Status text final
-                exitTl.to(statusEl, { opacity: 0, duration: 0.2 })
-                exitTl.to(statusEl, { duration: 0.01, onComplete: () => statusEl.textContent = 'Ready.' })
-                exitTl.to(statusEl, { opacity: 1, duration: 0.15 })
+            // Kick off after a brief pause
+            setTimeout(nextStep, 300)
 
-                // Logo mega-glitch on exit
-                exitTl.to(logoEl, {
-                    x: 'random(-8,8)', skewX: 'random(-6,6)',
-                    duration: 0.05, repeat: 5, yoyo: true, ease: 'none'
-                }, '+=0.1')
-
-                // Bar completes + flash white
-                exitTl.to(bar, { background: '#ffffff', boxShadow: '0 0 20px #fff', duration: 0.15 }, '-=0.1')
-
-                // Everything shrinks + fades
-                exitTl.to([logoEl, barWrap, pctEl, statusEl], {
-                    opacity: 0, y: -16, scale: 0.9, duration: 0.35, stagger: 0.06, ease: 'power2.in'
-                }, '+=0.1')
-                exitTl.to(brackets, { opacity: 0, scale: 0.5, duration: 0.25, stagger: 0.04, ease: 'power2.in' }, '-=0.2')
-
-                // Wipe panels slam in from sides → meet in centre → slam out
-                exitTl.to([wipeLeft, wipeRight], { width: '55%', duration: 0.45, ease: 'expo.in' }, '-=0.1')
-                exitTl.to([wipeLeft, wipeRight], { width: '0%', duration: 0.5, ease: 'expo.out' }, '+=0.05')
+            function exitLoader() {
+                // Final message + tada
+                gsap.to(msgEl, { opacity: 0, duration: 0.15, onComplete: () => {
+                    msgEl.textContent = 'ok let\'s go 🚀'
+                    gsap.to(msgEl, { opacity: 1, duration: 0.2 })
+                }})
+                emoji.textContent = '🎉'
+                gsap.fromTo(emoji,
+                    { scale: 1 },
+                    { scale: 1.5, duration: 0.2, yoyo: true, repeat: 1, ease: 'back.out(2)',
+                      onComplete: () => {
+                        gsap.to(loader, {
+                            opacity: 0, duration: 0.5, delay: 0.3, ease: 'power2.in',
+                            onComplete: () => {
+                                loader.remove()
+                                document.body.classList.remove('loading')
+                                runPageTimeline()
+                            }
+                        })
+                    }}
+                )
             }
         })()
 
