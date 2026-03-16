@@ -1,0 +1,21 @@
+
+
+
+.container {
+width: 86%;
+margin: auto;
+}
+
+body {
+background-color: black;
+}
+
+*
+ {
+    box-sizing: border-box;
+    border: 0 solid;
+    margin: 0;
+    padding: 0;
+ }
+ 
+ 
