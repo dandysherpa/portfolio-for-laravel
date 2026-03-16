@@ -7,29 +7,27 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
     <style>
         body { font-family: 'DM Sans', sans-serif; background-color: #0a0a0a; }
-        h1, nav .brand { font-family: 'Syne', sans-serif; }
+        h1, h2, .brand { font-family: 'Syne', sans-serif; }
     </style>
 </head>
 <body class="text-white min-h-screen">
 
+    <!-- ===== HEADER ===== -->
     <header>
         <nav class="container flex justify-between items-center text-white py-5">
-            <!-- Brand -->
-            <div class="brand">
-                <h1 class="text-[60px] font-bold cursor-pointer">PORT <span class="text-[#ff5a30]">folio</span></h1>
+            <div class="nav-brand brand">
+                <h1 class="text-[50px] font-bold cursor-pointer">PORT<span class="text-[#ff5a30]">folio</span></h1>
             </div>
-
-            <!-- Desktop links -->
             <div class="hidden md:flex gap-8 text-sm tracking-wide">
-                <a href="#" class="hover:text-[#ff5a30] transition-colors duration-200">Home</a>
-                <a href="#" class="hover:text-[#ff5a30] transition-colors duration-200">About</a>
-                <a href="#" class="hover:text-[#ff5a30] transition-colors duration-200">Projects</a>
-                <a href="#" class="hover:text-[#ff5a30] transition-colors duration-200">Contact</a>
+                <a href="#" class="nav-links-item hover:text-[#ff5a30] transition-colors duration-200">Home</a>
+                <a href="#" class="nav-links-item hover:text-[#ff5a30] transition-colors duration-200">About</a>
+                <a href="#" class="nav-links-item hover:text-[#ff5a30] transition-colors duration-200">Projects</a>
+                <a href="#" class="nav-links-item hover:text-[#ff5a30] transition-colors duration-200">Contact</a>
             </div>
-
-            <!-- Mobile hamburger -->
             <button
                 class="md:hidden flex flex-col gap-1.5 cursor-pointer"
                 onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
@@ -38,8 +36,6 @@
                 <span class="w-6 h-0.5 bg-white block"></span>
             </button>
         </nav>
-
-        <!-- Mobile menu -->
         <div id="mobile-menu" class="hidden bg-black">
             <div class="container flex flex-col gap-4 py-4 text-sm font-bold">
                 <a href="#" class="hover:text-[#ff5a30] transition-colors duration-200">Home</a>
@@ -50,50 +46,556 @@
         </div>
     </header>
 
+    <!-- ===== MAIN ===== -->
     <main>
-        <section class="container mt-16 flex flex-col-reverse md:flex-row items-center gap-12">
-
-            <!-- Text -->
+        <section class="container mt-16 flex flex-col-reverse md:flex-row items-center gap-12 pb-24">
             <div class="flex-1 text-center md:text-left">
-                <!-- Heading -->
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight text-white mb-6">
+                <h1 class="hero-heading text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight text-white mb-6">
                     Hi, I'm<br>
                     <span class="text-[#ff5a30]">Dandy Sherpa.</span><br>
-                    <span class="text-white/60 text-5xl sm:text-4xl font-bold">Junior Full-Stack Dev.</span>
+                    <span class="text-white/60 text-3xl sm:text-4xl font-bold">Junior Full-Stack Dev.</span>
                 </h1>
-
-                <!-- Description -->
-                <p class="text-white/55 text-base sm:text-lg font-light leading-relaxed mb-8 max-w-md mx-auto md:mx-0">
+                <p class="hero-sub text-white/55 text-base sm:text-lg font-light leading-relaxed mb-8 max-w-md mx-auto md:mx-0">
                     I love building intuitive web applications, solving problems, and turning ideas into functional, user-friendly experiences with Laravel and modern web technologies.
                 </p>
-
-                <!-- Button -->
                 <button
                     type="button"
-                    class="inline-flex items-center gap-2 px-6 py-3 border border-[#ff5a30] text-[#ff5a30] rounded text-sm cursor-pointer transition-all duration-200 hover:bg-[#ff5a30] hover:text-white group">
+                    class="hero-btn inline-flex items-center gap-2 px-6 py-3 border border-[#ff5a30] text-[#ff5a30] rounded text-sm cursor-pointer transition-all duration-200 hover:bg-[#ff5a30] hover:text-white group">
                     Read more
                     <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 14 14" fill="none">
                         <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
             </div>
-
-            <!-- Image -->
-            <div class="relative w-56 h-72 sm:w-64 sm:h-80 shrink-0">
+            <div class="hero-img relative w-56 h-72 sm:w-64 sm:h-80 shrink-0">
                 <div class="absolute -bottom-2 -right-2 w-full h-full rounded-xl border border-[#ff5a30]"></div>
                 <div class="absolute inset-0 rounded-xl border border-white/10 overflow-hidden bg-neutral-800">
-                    <img
-                        src="/images/DSC01049-removebg-preview.png"
-                        alt="Dandy Sherpa"
-                        class="w-full h-full object-cover object-top"
-                    />
+                    <img src="/images/DSC01049-removebg-preview.png" alt="Dandy Sherpa" class="w-full h-full object-cover object-top"/>
                 </div>
             </div>
-
         </section>
     </main>
 
-    <footer></footer>
+    <!-- ===== FOOTER ===== -->
+    <footer class="border-t border-white/10 mt-12">
+        <div class="container py-10">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+                <h2 class="footer-brand brand text-2xl font-bold cursor-pointer">SYDNEY<span class="text-[#ff5a30]">2026</span></h2>
+                <ul class="flex flex-wrap gap-6 text-sm text-white/55">
+                    <li><a href="#" class="footer-link hover:text-[#ff5a30] transition-colors duration-200">Home</a></li>
+                    <li><a href="#" class="footer-link hover:text-[#ff5a30] transition-colors duration-200">About</a></li>
+                    <li><a href="#" class="footer-link hover:text-[#ff5a30] transition-colors duration-200">Projects</a></li>
+                    <li><a href="#" class="footer-link hover:text-[#ff5a30] transition-colors duration-200">Contact</a></li>
+                </ul>
+            </div>
+
+            <hr class="my-6 border-white/10" />
+
+            <!-- Social Icons -->
+            <div class="flex justify-center gap-8 mb-6">
+                <a href="https://instagram.com/jiiigme" target="_blank" class="footer-social text-white/40 hover:text-[#ff5a30] transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                </a>
+                <a href="https://linkedin.com/in/dandysherpa" target="_blank" class="footer-social text-white/40 hover:text-[#ff5a30] transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"/>
+                    </svg>
+                </a>
+                <a href="mailto:codingwithdandysherpa@gmail.com" class="footer-social text-white/40 hover:text-[#ff5a30] transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.910 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
+                    </svg>
+                </a>
+                <a href="https://github.com/codingwithdandysherpa" target="_blank" class="footer-social text-white/40 hover:text-[#ff5a30] transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.929.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                </a>
+            </div>
+
+            <span class="footer-copy block text-sm text-white/30 text-center">
+                © 2026 Dandy Sherpa. All Rights Reserved.
+            </span>
+        </div>
+    </footer>
+    <!-- ===== THEME TOGGLE ===== -->
+<button id="theme-toggle" class="fixed top-6 right-6 z-[99999] w-14 h-7 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm flex items-center px-1 cursor-pointer transition-colors duration-500">
+    <div id="toggle-thumb" class="w-5 h-5 rounded-full bg-[#ff5a30] flex items-center justify-center text-[10px] shadow-lg">
+        🌙
+    </div>
+</button>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger)
+        // ===== MOUSE EFFECT - spotlight + magnetic field =====
+
+// Remove any previous cursor styles
+document.body.style.cursor = 'auto'
+
+// Spotlight that follows mouse across entire page
+const pageSpotlight = document.createElement('div')
+pageSpotlight.style.cssText = `
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,90,48,0.04) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+`
+document.body.appendChild(pageSpotlight)
+
+// Ripple ring that follows mouse
+const rippleRing = document.createElement('div')
+rippleRing.style.cssText = `
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    border: 1px solid rgba(255,90,48,0.6);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+`
+document.body.appendChild(rippleRing)
+
+document.addEventListener('mouseenter', () => {
+    pageSpotlight.style.opacity = '1'
+    gsap.to(rippleRing, { opacity: 1, duration: 0.3 })
+})
+document.addEventListener('mouseleave', () => {
+    pageSpotlight.style.opacity = '0'
+    gsap.to(rippleRing, { opacity: 0, duration: 0.3 })
+})
+
+document.addEventListener('mousemove', (e) => {
+    // Spotlight smoothly follows
+    gsap.to(pageSpotlight, {
+        left: e.clientX,
+        top: e.clientY,
+        duration: 0.8,
+        ease: 'power2.out'
+    })
+
+    // Ring follows tightly
+    gsap.to(rippleRing, {
+        left: e.clientX,
+        top: e.clientY,
+        duration: 0.15,
+        ease: 'power2.out'
+    })
+})
+
+// Ring expands on hoverable elements
+document.querySelectorAll('a, button, .hero-img, .footer-social').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+        gsap.to(rippleRing, {
+            width: 50,
+            height: 50,
+            borderColor: 'rgba(255,90,48,0.9)',
+            borderWidth: '1.5px',
+            duration: 0.25,
+            ease: 'power2.out'
+        })
+    })
+    el.addEventListener('mouseleave', () => {
+        gsap.to(rippleRing, {
+            width: 20,
+            height: 20,
+            borderColor: 'rgba(255,90,48,0.6)',
+            borderWidth: '1px',
+            duration: 0.25,
+            ease: 'power2.out'
+        })
+    })
+})
+
+// Click burst
+document.addEventListener('click', (e) => {
+    for (let i = 0; i < 8; i++) {
+        const burst = document.createElement('div')
+        const angle = (i / 8) * 360
+        const distance = 40 + Math.random() * 30
+        burst.style.cssText = `
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: #ff5a30;
+            pointer-events: none;
+            z-index: 9999;
+            left: ${e.clientX}px;
+            top: ${e.clientY}px;
+            transform: translate(-50%, -50%);
+        `
+        document.body.appendChild(burst)
+        gsap.to(burst, {
+            x: Math.cos((angle * Math.PI) / 180) * distance,
+            y: Math.sin((angle * Math.PI) / 180) * distance,
+            opacity: 0,
+            scale: 0,
+            duration: 0.5 + Math.random() * 0.3,
+            ease: 'power2.out',
+            onComplete: () => burst.remove()
+        })
+    }
+})
+        
+
+        // ===== PAGE LOAD TIMELINE =====
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+        tl.from('.nav-brand',      { opacity: 0, y: -24, duration: 0.6 })
+        tl.from('.nav-links-item', { opacity: 0, y: -16, duration: 0.4, stagger: 0.1 }, '-=0.3')
+        tl.from('.hero-heading',   { opacity: 0, y: 40,  duration: 0.6 }, '-=0.2')
+        tl.from('.hero-sub',       { opacity: 0, y: 30,  duration: 0.5 }, '-=0.3')
+        tl.from('.hero-btn',       { opacity: 0, y: 20,  duration: 0.4 }, '-=0.3')
+        tl.from('.hero-img',       { opacity: 0, x: 50,  duration: 0.7 }, '-=0.8')
+
+        // ===== NAVBAR LINKS - magnetic effect =====
+        document.querySelectorAll('.nav-links-item').forEach(link => {
+            link.addEventListener('mousemove', (e) => {
+                const rect = link.getBoundingClientRect()
+                const deltaX = (e.clientX - (rect.left + rect.width / 2)) * 0.4
+                const deltaY = (e.clientY - (rect.top + rect.height / 2)) * 0.4
+                gsap.to(link, { x: deltaX, y: deltaY, duration: 0.2, ease: 'power2.out' })
+            })
+            link.addEventListener('mouseleave', () => {
+                gsap.to(link, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.4)' })
+            })
+        })
+
+        // ===== BRAND - letter scramble =====
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+
+        function scramble(el, resolvedHTML, splitIndex, interval) {
+            const text = el.innerText
+            let iterations = 0
+            clearInterval(interval)
+            interval = setInterval(() => {
+                el.innerHTML = text
+                    .split('')
+                    .map((char, i) => {
+                        if (char === ' ') return ' '
+                        if (i < iterations) return `<span class="${i >= splitIndex ? 'text-[#ff5a30]' : 'text-white'}">${text[i]}</span>`
+                        return `<span class="${i >= splitIndex ? 'text-[#ff5a30]' : 'text-white'}">${chars[Math.floor(Math.random() * chars.length)]}</span>`
+                    })
+                    .join('')
+                iterations += 0.5
+                if (iterations >= text.length) clearInterval(interval)
+            }, 40)
+            return interval
+        }
+
+        // Navbar brand scramble
+        const navBrandEl = document.querySelector('.nav-brand h1')
+        let navScramble
+        navBrandEl.addEventListener('mouseenter', () => {
+            navScramble = scramble(navBrandEl, `PORT<span class="text-[#ff5a30]">folio</span>`, 4, navScramble)
+        })
+        navBrandEl.addEventListener('mouseleave', () => {
+            clearInterval(navScramble)
+            navBrandEl.innerHTML = `PORT<span class="text-[#ff5a30]">folio</span>`
+        })
+
+        // Footer brand scramble
+        const footerBrandEl = document.querySelector('.footer-brand')
+        let footerScramble
+        footerBrandEl.addEventListener('mouseenter', () => {
+            footerScramble = scramble(footerBrandEl, `SYDNEY<span class="text-[#ff5a30]">2026</span>`, 6, footerScramble)
+        })
+        footerBrandEl.addEventListener('mouseleave', () => {
+            clearInterval(footerScramble)
+            footerBrandEl.innerHTML = `SYDNEY<span class="text-[#ff5a30]">2026</span>`
+        })
+
+        // ===== HERO HEADING - letter spacing expand =====
+        const heading = document.querySelector('.hero-heading')
+        heading.addEventListener('mouseenter', () => {
+            gsap.to('.hero-heading', { letterSpacing: '0.04em', duration: 0.4, ease: 'power2.out' })
+            gsap.to('.hero-heading span:first-child', { x: 10, duration: 0.4, ease: 'power2.out' })
+        })
+        heading.addEventListener('mouseleave', () => {
+            gsap.to('.hero-heading', { letterSpacing: '-0.025em', duration: 0.4, ease: 'power2.inOut' })
+            gsap.to('.hero-heading span:first-child', { x: 0, duration: 0.4, ease: 'power2.inOut' })
+        })
+
+        // ===== HERO IMAGE - 3D tilt =====
+        const imgWrapper = document.querySelector('.hero-img')
+        imgWrapper.addEventListener('mousemove', (e) => {
+            const rect = imgWrapper.getBoundingClientRect()
+            const rotateX = (((e.clientY - rect.top) - rect.height / 2) / (rect.height / 2)) * -12
+            const rotateY = (((e.clientX - rect.left) - rect.width / 2) / (rect.width / 2)) * 12
+            gsap.to(imgWrapper, { rotateX, rotateY, y: -10, scale: 1.03, duration: 0.3, ease: 'power2.out', transformPerspective: 800 })
+        })
+        imgWrapper.addEventListener('mouseleave', () => {
+            gsap.to(imgWrapper, { rotateX: 0, rotateY: 0, y: 0, scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.4)' })
+        })
+
+        // ===== BUTTON - shake + scale =====
+        const btn = document.querySelector('.hero-btn')
+        btn.addEventListener('mouseenter', () => {
+            gsap.fromTo(btn, { x: -3 }, { x: 3, duration: 0.08, repeat: 4, yoyo: true, ease: 'none', onComplete: () => gsap.set(btn, { x: 0 }) })
+            gsap.to(btn, { scale: 1.06, duration: 0.2, ease: 'power2.out' })
+        })
+        btn.addEventListener('mouseleave', () => {
+            gsap.to(btn, { scale: 1, duration: 0.3, ease: 'power2.inOut' })
+        })
+
+        // ===== HERO SUBTEXT - brighten on hover =====
+        document.querySelector('.hero-sub').addEventListener('mouseenter', () => {
+            gsap.to('.hero-sub', { opacity: 1, y: -4, duration: 0.3, ease: 'power2.out' })
+        })
+        document.querySelector('.hero-sub').addEventListener('mouseleave', () => {
+            gsap.to('.hero-sub', { opacity: 0.55, y: 0, duration: 0.3, ease: 'power2.in' })
+        })
+
+        // ===== FOOTER - scroll trigger animations =====
+        gsap.from('.footer-brand', {
+            scrollTrigger: { trigger: '.footer-brand', start: 'top 90%' },
+            opacity: 0, x: -40, duration: 0.6, ease: 'power3.out'
+        })
+        gsap.from('.footer-link', {
+            scrollTrigger: { trigger: '.footer-link', start: 'top 90%' },
+            opacity: 0, y: 20, duration: 0.4, stagger: 0.1, ease: 'power3.out'
+        })
+        gsap.from('.footer-copy', {
+            scrollTrigger: { trigger: '.footer-copy', start: 'top 95%' },
+            opacity: 0, y: 10, duration: 0.4, ease: 'power3.out'
+        })
+
+        // Footer links magnetic effect
+        document.querySelectorAll('.footer-link').forEach(link => {
+            link.addEventListener('mousemove', (e) => {
+                const rect = link.getBoundingClientRect()
+                const deltaX = (e.clientX - (rect.left + rect.width / 2)) * 0.4
+                const deltaY = (e.clientY - (rect.top + rect.height / 2)) * 0.4
+                gsap.to(link, { x: deltaX, y: deltaY, duration: 0.2, ease: 'power2.out' })
+            })
+            link.addEventListener('mouseleave', () => {
+                gsap.to(link, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.4)' })
+            })
+        })
+
+        // ===== SOCIAL ICONS =====
+
+        // Cursor spotlight on footer
+        const footer = document.querySelector('footer')
+        const spotlight = document.createElement('div')
+        spotlight.style.cssText = `
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,90,48,0.08) 0%, transparent 70%);
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            z-index: 0;
+        `
+        footer.style.position = 'relative'
+        footer.style.overflow = 'hidden'
+        footer.appendChild(spotlight)
+
+        footer.addEventListener('mouseenter', () => { spotlight.style.opacity = '1' })
+        footer.addEventListener('mouseleave', () => { spotlight.style.opacity = '0' })
+        footer.addEventListener('mousemove', (e) => {
+            const rect = footer.getBoundingClientRect()
+            gsap.to(spotlight, {
+                left: e.clientX - rect.left,
+                top: e.clientY - rect.top,
+                duration: 0.4,
+                ease: 'power2.out'
+            })
+        })
+
+        // Social icons scroll entrance
+        gsap.from('.footer-social', {
+            scrollTrigger: { trigger: '.footer-social', start: 'top 95%' },
+            opacity: 0, y: 30, scale: 0.5, duration: 0.5, stagger: 0.1, ease: 'back.out(1.7)'
+        })
+
+        // Social icons idle float + hover effects
+        document.querySelectorAll('.footer-social').forEach((icon, index) => {
+            icon.style.position = 'relative'
+
+            // Idle float
+            gsap.to(icon, {
+                y: -5,
+                duration: 1.5 + index * 0.2,
+                repeat: -1,
+                yoyo: true,
+                ease: 'sine.inOut',
+                delay: index * 0.3
+            })
+
+            icon.addEventListener('mouseenter', () => {
+                gsap.killTweensOf(icon)
+                gsap.to(icon, { scale: 1.4, rotate: 360, duration: 0.4, ease: 'power2.out' })
+                gsap.to(icon, { filter: 'drop-shadow(0 0 8px #ff5a30)', duration: 0.3 })
+
+                // Burst particles
+                for (let i = 0; i < 6; i++) {
+                    const particle = document.createElement('div')
+                    const angle = (i / 6) * 360
+                    const distance = 30 + Math.random() * 20
+                    particle.style.cssText = `
+                        position: absolute;
+                        width: 4px; height: 4px;
+                        border-radius: 50%;
+                        background: #ff5a30;
+                        pointer-events: none;
+                        top: 50%; left: 50%;
+                        transform: translate(-50%, -50%);
+                        z-index: 10;
+                    `
+                    icon.appendChild(particle)
+                    gsap.to(particle, {
+                        x: Math.cos((angle * Math.PI) / 180) * distance,
+                        y: Math.sin((angle * Math.PI) / 180) * distance,
+                        opacity: 0,
+                        scale: 0,
+                        duration: 0.6,
+                        ease: 'power2.out',
+                        onComplete: () => particle.remove()
+                    })
+                }
+            })
+
+            icon.addEventListener('mouseleave', () => {
+                gsap.to(icon, {
+                    scale: 1, rotate: 0,
+                    filter: 'drop-shadow(0 0 0px transparent)',
+                    duration: 0.5,
+                    ease: 'elastic.out(1, 0.4)',
+                    onComplete: () => {
+                        gsap.to(icon, {
+                            y: -5,
+                            duration: 1.5 + index * 0.2,
+                            repeat: -1,
+                            yoyo: true,
+                            ease: 'sine.inOut'
+                        })
+                    }
+                })
+            })
+        })
+        // ===== THEME TOGGLE =====
+const toggleBtn = document.getElementById('theme-toggle')
+const toggleThumb = document.getElementById('toggle-thumb')
+let isLight = false
+
+// Burst of particles on toggle
+function toggleBurst(x, y) {
+    for (let i = 0; i < 10; i++) {
+        const p = document.createElement('div')
+        const angle = (i / 10) * 360
+        const distance = 50 + Math.random() * 30
+        p.style.cssText = `
+            position: fixed;
+            width: ${Math.random() * 5 + 2}px;
+            height: ${Math.random() * 5 + 2}px;
+            border-radius: 50%;
+            background: #ff5a30;
+            pointer-events: none;
+            z-index: 99999;
+            left: ${x}px; top: ${y}px;
+            transform: translate(-50%,-50%);
+        `
+        document.body.appendChild(p)
+        gsap.to(p, {
+            x: Math.cos((angle * Math.PI) / 180) * distance,
+            y: Math.sin((angle * Math.PI) / 180) * distance,
+            opacity: 0, scale: 0,
+            duration: 0.6 + Math.random() * 0.3,
+            ease: 'power2.out',
+            onComplete: () => p.remove()
+        })
+    }
+}
+
+// Page flash wipe transition
+function flashTransition(toLight) {
+    const flash = document.createElement('div')
+    flash.style.cssText = `
+        position: fixed;
+        inset: 0;
+        background: ${toLight ? '#f5f5f0' : '#0a0a0a'};
+        z-index: 99998;
+        pointer-events: none;
+        opacity: 0;
+    `
+    document.body.appendChild(flash)
+    gsap.timeline()
+        .to(flash, { opacity: 1, duration: 0.2, ease: 'power2.in' })
+        .to(flash, { opacity: 0, duration: 0.4, ease: 'power2.out',
+            onStart: () => {
+                if (toLight) {
+                    document.body.classList.add('light')
+                } else {
+                    document.body.classList.remove('light')
+                }
+            },
+            onComplete: () => flash.remove()
+        })
+}
+
+toggleBtn.addEventListener('click', (e) => {
+    isLight = !isLight
+    const rect = toggleBtn.getBoundingClientRect()
+
+    // Thumb slides across
+    gsap.to(toggleThumb, {
+        x: isLight ? 28 : 0,
+        duration: 0.4,
+        ease: 'back.out(2)'
+    })
+
+    // Thumb icon swap
+    gsap.to(toggleThumb, {
+        scale: 0, rotate: 180, duration: 0.15, ease: 'power2.in',
+        onComplete: () => {
+            toggleThumb.textContent = isLight ? '☀️' : '🌙'
+            gsap.to(toggleThumb, { scale: 1, rotate: 0, duration: 0.2, ease: 'back.out(2)' })
+        }
+    })
+
+    // Burst particles from toggle
+    toggleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2)
+
+    // Full page flash transition
+    flashTransition(isLight)
+
+    // Toggle border glow pulse
+    gsap.fromTo(toggleBtn,
+        { boxShadow: '0 0 0px rgba(255,90,48,0)' },
+        { boxShadow: '0 0 20px rgba(255,90,48,0.5)', duration: 0.3, yoyo: true, repeat: 1, ease: 'power2.out' }
+    )
+})
+
+// Hover wobble on toggle
+toggleBtn.addEventListener('mouseenter', () => {
+    gsap.to(toggleBtn, { scale: 1.1, duration: 0.2, ease: 'power2.out' })
+})
+toggleBtn.addEventListener('mouseleave', () => {
+    gsap.to(toggleBtn, { scale: 1, duration: 0.3, ease: 'elastic.out(1, 0.4)' })
+})
+onStart: () => {
+    if (toLight) {
+        document.body.classList.add('light')
+        pageSpotlight.style.background = 'radial-gradient(circle, rgba(255,90,48,0.06) 0%, transparent 70%)'
+    } else {
+        document.body.classList.remove('light')
+        pageSpotlight.style.background = 'radial-gradient(circle, rgba(255,90,48,0.04) 0%, transparent 70%)'
+    }
+}
+
+    </script>
 
 </body>
 </html>
