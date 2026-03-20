@@ -6,21 +6,47 @@
     <title>Portfolio</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Vif font from 1924.us -->
+    <link rel="stylesheet" href="https://1924.us/fonts/vif.css">
+
+    <!-- Fallback: DM Sans + JetBrains Mono from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
 
     <style>
         *, *::before, *::after { box-sizing: border-box; }
-        body { font-family: 'DM Sans', sans-serif; background-color: #0a0a0a; overflow-x: hidden; }
-        h1, h2, .brand { font-family: 'Syne', sans-serif; }
+
+        /* CSS custom properties */
+        :root {
+            --bg-primary:   #fcf8f2;
+            --bg-secondary: #ede7da;
+            --text-primary: #363532;
+            --text-muted:   rgba(54,53,50,0.55);
+            --text-faint:   rgba(54,53,50,0.30);
+            --accent:       #BAC095;
+            --border-soft:  rgba(54,53,50,0.12);
+            --border-faint: rgba(54,53,50,0.07);
+            --card-bg:      #f0e8d8;
+        }
+
+        body {
+            font-family: 'Vif', 'DM Sans', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+        h1, h2, h3, .brand { font-family: 'Vif', sans-serif; }
+        .font-mono, code { font-family: 'JetBrains Mono', monospace; }
 
         /* ── NOISE TEXTURE overlay ── */
         body::before {
             content: '';
             position: fixed; inset: 0; z-index: 0; pointer-events: none;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-            opacity: 0.4;
+            opacity: 0.25;
         }
 
         /* ── HEADER ── */
@@ -32,355 +58,365 @@
         }
         header.scrolled {
             backdrop-filter: blur(20px);
-            background: rgba(10,10,10,0.8);
-            border-bottom-color: rgba(255,255,255,0.06);
+            background: rgba(252,248,242,0.88);
+            border-bottom-color: var(--border-soft);
         }
-
         .nav-glow-line {
             position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
-            background: linear-gradient(90deg, transparent, #ff5a30, transparent);
+            background: linear-gradient(90deg, transparent, #BAC095, transparent);
             transform: scaleX(0); transform-origin: center;
             transition: transform 0.8s ease;
         }
         header.scrolled .nav-glow-line { transform: scaleX(1); }
 
-        /* Nav link underline draw */
         .nav-links-item {
             position: relative; padding-bottom: 3px;
+            color: var(--text-primary);
         }
         .nav-links-item::after {
             content: ''; position: absolute; bottom: -2px; left: 0;
-            width: 0; height: 1px; background: #ff5a30;
+            width: 0; height: 1px; background: #BAC095;
             transition: width 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
         }
         .nav-links-item:hover::after { width: 100%; }
+        .nav-links-item:hover { color: #BAC095; }
 
         /* Burger → X morph */
-        .burger-line { transition: transform 0.35s ease, opacity 0.3s ease, width 0.3s ease; transform-origin: center; }
+        .burger-line { transition: transform 0.35s ease, opacity 0.3s ease, width 0.3s ease; transform-origin: center; background: var(--text-primary) !important; }
         .menu-open .burger-line:nth-child(1) { transform: translateY(8px) rotate(45deg); }
         .menu-open .burger-line:nth-child(2) { opacity: 0; transform: scaleX(0); }
         .menu-open .burger-line:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
-        /* Mobile menu — proper slide using transform instead of max-height */
+        /* Mobile menu */
         #mobile-menu {
-            overflow: hidden;
-            display: grid;
-            grid-template-rows: 0fr;
+            overflow: hidden; display: grid; grid-template-rows: 0fr;
             transition: grid-template-rows 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+            background: rgba(252,248,242,0.97);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-faint);
         }
         #mobile-menu.open { grid-template-rows: 1fr; }
         #mobile-menu > div { overflow: hidden; }
+        #mobile-menu a { color: var(--text-primary); border-bottom-color: var(--border-faint); }
+        #mobile-menu a:hover { color: #BAC095; }
 
         /* ── HERO ── */
         .hero-bg-orb {
             position: absolute; border-radius: 50%; pointer-events: none;
-            filter: blur(80px); opacity: 0.12;
+            filter: blur(80px); opacity: 0.10;
         }
 
         .typewriter-cursor {
             display: inline-block; width: 3px; height: 0.85em;
-            background: #ff5a30; margin-left: 3px;
+            background: #BAC095; margin-left: 3px;
             animation: blink 0.9s step-end infinite; vertical-align: middle;
         }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
         .hero-ring {
-            position: absolute; border-radius: 50%; border: 1px solid rgba(255,90,48,0.25);
+            position: absolute; border-radius: 50%; border: 1px solid rgba(186,192,149,0.20);
             animation: ringPulse 3s ease-in-out infinite; pointer-events: none;
         }
-        @keyframes ringPulse { 0%,100%{transform:scale(1);opacity:0.3} 50%{transform:scale(1.08);opacity:0.6} }
+        @keyframes ringPulse { 0%,100%{transform:scale(1);opacity:0.25} 50%{transform:scale(1.08);opacity:0.5} }
 
         .hero-img-glow {
             position: absolute; inset: -20px; border-radius: 1.5rem;
-            background: radial-gradient(ellipse, rgba(255,90,48,0.18) 0%, transparent 70%);
+            background: radial-gradient(ellipse, rgba(186,192,149,0.14) 0%, transparent 70%);
             pointer-events: none; opacity: 0; transition: opacity 0.4s ease;
         }
         .hero-img:hover .hero-img-glow { opacity: 1; }
 
         .hero-stat { opacity: 0; transform: translateY(20px); }
 
-        /* Scroll indicator */
         .scroll-indicator {
             position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
             display: flex; flex-direction: column; align-items: center; gap: 5px;
             opacity: 0; animation: siAppear 1s ease 2.8s forwards;
         }
-        .scroll-dot { width: 4px; height: 4px; border-radius: 50%; background: #ff5a30; animation: sBounce 1.5s ease-in-out infinite; }
+        .scroll-dot { width: 4px; height: 4px; border-radius: 50%; background: #BAC095; animation: sBounce 1.5s ease-in-out infinite; }
         .scroll-dot:nth-child(2){animation-delay:0.2s;opacity:0.55}
         .scroll-dot:nth-child(3){animation-delay:0.4s;opacity:0.25}
         @keyframes sBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
         @keyframes siAppear { to{opacity:1;transform:translateX(-50%) translateY(0)} }
+
+        /* ── HERO eyebrow badge ── */
+        .hero-eyebrow {
+            border: 1px solid var(--border-soft);
+            background: rgba(54,53,50,0.05);
+        }
+        .hero-eyebrow span.font-mono { color: var(--text-muted); }
+
+        /* Hero heading */
+        .hero-heading { color: var(--text-primary); }
+        .hero-heading span.text-white\/60 { color: var(--text-muted) !important; }
+
+        /* Hero sub */
+        .hero-sub { color: var(--text-muted); }
+
+        /* CTA buttons */
+        .hero-btn {
+            border: 1px solid #BAC095; color: #BAC095; background: transparent;
+            transition: background 0.2s, color 0.2s;
+        }
+        .hero-btn:hover { background: #BAC095; color: #fcf8f2; }
+        .hero-btn-2 {
+            background: rgba(54,53,50,0.06); border: 1px solid var(--border-soft); color: var(--text-muted);
+            transition: background 0.2s, color 0.2s;
+        }
+        .hero-btn-2:hover { background: rgba(54,53,50,0.10); color: var(--text-primary); }
+
+        /* Hero stats */
+        .stat-num { color: var(--text-primary) !important; }
+        .hero-stat .text-xs { color: var(--text-faint) !important; }
+
+        /* Hero image */
+        .hero-img .absolute.-bottom-2.-right-2 { border-color: #BAC095; }
+        .hero-img .absolute.inset-0 { background: var(--bg-secondary); border-color: var(--border-soft); }
 
         /* ── SKILLS ── */
         .skill-card { opacity:0; transform:translateY(40px); transform-style:preserve-3d; }
         .banner-img { transition:transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94); }
         .skill-card:hover .banner-img { transform:scale(1.1); }
         .prof-fill { height:100%; border-radius:9999px; width:0%; transition:width 1.3s cubic-bezier(0.25,0.46,0.45,0.94); }
-        .skill-card-inner { transform-style:preserve-3d; transition:box-shadow 0.3s ease; }
-        .skill-card:hover .skill-card-inner { box-shadow:0 30px 60px rgba(0,0,0,0.5),0 0 40px rgba(255,90,48,0.08); }
-        .banner-shimmer { position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.08) 50%,transparent 60%);background-size:200% 100%;background-position:200% 0;pointer-events:none; }
+        .skill-card-inner {
+            transform-style:preserve-3d;
+            transition:box-shadow 0.3s ease;
+            background: var(--card-bg) !important;
+            border-color: var(--border-soft) !important;
+        }
+        .skill-card:hover .skill-card-inner {
+            box-shadow: 0 30px 60px rgba(54,53,50,0.14), 0 0 40px rgba(186,192,149,0.07);
+            border-color: rgba(54,53,50,0.20) !important;
+        }
+        .banner-shimmer { position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.12) 50%,transparent 60%);background-size:200% 100%;background-position:200% 0;pointer-events:none; }
         .skill-card:hover .banner-shimmer { transition:background-position 0.6s ease;background-position:-200% 0; }
         .card-border-chase { position:absolute;inset:-1px;border-radius:1rem;pointer-events:none;overflow:hidden;z-index:0; }
-        .card-border-chase::before { content:'';position:absolute;width:200%;height:200%;top:-50%;left:-50%;background:conic-gradient(transparent 0deg,transparent 270deg,#ff5a30 280deg,transparent 290deg);animation:borderSpin 3s linear infinite paused;opacity:0;transition:opacity 0.3s; }
+        .card-border-chase::before { content:'';position:absolute;width:200%;height:200%;top:-50%;left:-50%;background:conic-gradient(transparent 0deg,transparent 270deg,#BAC095 280deg,transparent 290deg);animation:borderSpin 3s linear infinite paused;opacity:0;transition:opacity 0.3s; }
         .skill-card:hover .card-border-chase::before { animation-play-state:running;opacity:1; }
-        .card-border-inner { position:absolute;inset:1px;border-radius:calc(1rem - 1px);background:#111111;z-index:1; }
+        .card-border-inner { position:absolute;inset:1px;border-radius:calc(1rem - 1px);background: var(--card-bg);z-index:1; }
         @keyframes borderSpin { to{transform:rotate(360deg)} }
-        .card-title-glitch { position:relative;display:inline-block; }
+        .card-title-glitch { position:relative;display:inline-block;color: var(--text-primary); }
         .card-title-glitch::before,.card-title-glitch::after { content:attr(data-text);position:absolute;top:0;left:0;opacity:0;clip-path:inset(0 0 100% 0); }
-        .card-title-glitch::before { color:#ff5a30;transform:translateX(-2px); }
+        .card-title-glitch::before { color:#BAC095;transform:translateX(-2px); }
         .card-title-glitch::after  { color:#00d4ff;transform:translateX(2px); }
         .skill-card:hover .card-title-glitch::before,.skill-card:hover .card-title-glitch::after { animation:glitchClip 1.5s steps(1) infinite;opacity:1; }
         .skill-card:hover .card-title-glitch::after { animation-delay:0.05s; }
         @keyframes glitchClip { 0%{clip-path:inset(80% 0 0 0)}10%{clip-path:inset(10% 0 70% 0)}20%{clip-path:inset(50% 0 30% 0)}30%{clip-path:inset(0 0 90% 0)}40%{clip-path:inset(60% 0 20% 0)}50%{clip-path:inset(30% 0 50% 0)}60%{clip-path:inset(0 0 0 0);opacity:0}100%{opacity:0} }
         .logo-icon-wrap { transition:transform 0.4s ease;position:relative; }
         .logo-icon-wrap::after { content:'';position:absolute;inset:-4px;border-radius:14px;border:1px solid transparent;transition:border-color 0.3s,box-shadow 0.3s; }
-        .skill-card:hover .logo-icon-wrap::after { border-color:rgba(255,90,48,0.4);box-shadow:0 0 12px rgba(255,90,48,0.2);animation:logoRingPulse 1.2s ease-in-out infinite; }
-        @keyframes logoRingPulse { 0%,100%{box-shadow:0 0 8px rgba(255,90,48,0.2)}50%{box-shadow:0 0 20px rgba(255,90,48,0.5)} }
-        .skill-pill { cursor:default;transition:transform 0.2s ease,background 0.2s ease,color 0.2s ease,border-color 0.2s ease;display:inline-block; }
-        .skill-pill:hover { transform:translateY(-3px) scale(1.1);background:rgba(255,90,48,0.1);border-color:rgba(255,90,48,0.5);color:#ff5a30; }
+        .skill-card:hover .logo-icon-wrap::after { border-color:rgba(186,192,149,0.4);box-shadow:0 0 12px rgba(186,192,149,0.2);animation:logoRingPulse 1.2s ease-in-out infinite; }
+        @keyframes logoRingPulse { 0%,100%{box-shadow:0 0 8px rgba(186,192,149,0.2)}50%{box-shadow:0 0 20px rgba(186,192,149,0.5)} }
+        .skill-pill { cursor:default;transition:transform 0.2s,background 0.2s,color 0.2s,border-color 0.2s;display:inline-block;color:var(--text-muted);border-color:var(--border-soft); }
+        .skill-pill:hover { transform:translateY(-3px) scale(1.1);background:rgba(186,192,149,0.08);border-color:rgba(186,192,149,0.45);color:#BAC095; }
         .card-orb { position:absolute;border-radius:50%;pointer-events:none;opacity:0;transition:opacity 0.4s ease;filter:blur(20px); }
-        .skill-card:hover .card-orb { opacity:1; }
-        .card-scanline { position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(255,90,48,0.4),transparent);pointer-events:none;opacity:0;top:0; }
+        .skill-card:hover .card-orb { opacity:0.35; }
+        .card-scanline { position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(186,192,149,0.35),transparent);pointer-events:none;opacity:0;top:0; }
         .skill-card:hover .card-scanline { opacity:1;animation:scanDown 1.5s ease-in-out infinite; }
         @keyframes scanDown { 0%{top:0%;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:100%;opacity:0} }
-        .skill-desc { transition:color 0.3s ease; }
-        .skill-card:hover .skill-desc { color:rgba(255,255,255,0.75); }
-        .skill-badge { transition:transform 0.2s ease,background 0.2s ease,color 0.2s ease;cursor:default; }
-        .skill-badge:hover { transform:scale(1.15) translateY(-2px);background:rgba(255,90,48,0.2);color:#ff5a30;border-color:rgba(255,90,48,0.4); }
+        .skill-desc { color:var(--text-muted);transition:color 0.3s; }
+        .skill-card:hover .skill-desc { color:var(--text-primary); }
+        .skill-badge { transition:transform 0.2s,background 0.2s,color 0.2s;cursor:default;background:rgba(252,248,242,0.60);color:var(--text-primary);border:1px solid var(--border-soft);backdrop-filter:blur(4px); }
+        .skill-badge:hover { transform:scale(1.15) translateY(-2px);background:rgba(186,192,149,0.12);color:#BAC095;border-color:rgba(186,192,149,0.35); }
+        .prof-track { background:rgba(54,53,50,0.10) !important; }
         .prof-fill { position:relative;overflow:visible; }
         .skill-card:hover .prof-fill { box-shadow:0 0 8px currentColor; }
-        .corner-dot { position:absolute;width:4px;height:4px;border-radius:50%;background:#ff5a30;opacity:0;transition:opacity 0.3s ease; }
+        .corner-dot { position:absolute;width:4px;height:4px;border-radius:50%;background:#BAC095;opacity:0;transition:opacity 0.3s; }
         .skill-card:hover .corner-dot { opacity:1;animation:cornerPulse 1s ease-in-out infinite; }
         .corner-dot:nth-child(2){animation-delay:0.25s!important}
         .corner-dot:nth-child(3){animation-delay:0.5s!important}
         .corner-dot:nth-child(4){animation-delay:0.75s!important}
         @keyframes cornerPulse { 0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.8);opacity:0.5} }
 
-        /* ── FOOTER ── */
-        .footer-marquee-wrap { overflow:hidden;white-space:nowrap;cursor:default; }
-        .footer-marquee { display:inline-flex;gap:3rem;animation:marquee 18s linear infinite; }
-        .footer-marquee span { color:rgba(255,255,255,0.055);font-size:4.5rem;font-family:'Syne',sans-serif;font-weight:800;letter-spacing:-0.02em;user-select:none; }
-        @keyframes marquee { from{transform:translateX(0)}to{transform:translateX(-50%)} }
+        /* Skill level label */
+        .skill-card .text-white\/30 { color: var(--text-faint) !important; }
 
-        .footer-divider-line { height:1px;background:linear-gradient(90deg,transparent,rgba(255,90,48,0.4),transparent);transform:scaleX(0);transform-origin:center;transition:transform 0s; }
+        /* ── FOOTER ── */
+        footer { background: var(--bg-secondary); border-top: 1px solid var(--border-soft); }
+        .footer-marquee-wrap { overflow:hidden;white-space:nowrap;cursor:default;border-bottom:1px solid var(--border-faint); }
+        .footer-marquee { display:inline-flex;gap:3rem;animation:marquee 18s linear infinite; }
+        .footer-marquee span { color:rgba(54,53,50,0.08);font-family:'Vif',sans-serif;font-weight:800;letter-spacing:-0.02em;user-select:none; }
+        @keyframes marquee { from{transform:translateX(0)}to{transform:translateX(-50%)} }
+        .footer-marquee span { font-size: clamp(2rem, 8vw, 4.5rem); }
+
+        .footer-divider-line { height:1px;background:linear-gradient(90deg,transparent,rgba(186,192,149,0.35),transparent);transform:scaleX(0);transform-origin:center;transition:transform 0s; }
         .footer-divider-line.visible { transform:scaleX(1);transition:transform 0.9s ease; }
 
-        .footer-link { position:relative; }
-        .footer-link::after { content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:#ff5a30;transition:width 0.3s ease; }
+        .footer-link { position:relative;color:var(--text-muted); }
+        .footer-link::after { content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:#BAC095;transition:width 0.3s; }
         .footer-link:hover::after { width:100%; }
+        .footer-link:hover { color:#BAC095; }
 
-        /* ── LIGHT MODE ── */
-        body.light { background-color:#f5f5f0;color:#0a0a0a; }
-        body.light header.scrolled { background:rgba(245,245,240,0.85);border-bottom-color:rgba(0,0,0,0.08); }
-        body.light .skill-card-inner { background:#ffffff!important;border-color:rgba(0,0,0,0.1)!important; }
-        body.light .card-border-inner { background:#ffffff; }
-        body.light .skill-pill { border-color:rgba(0,0,0,0.15);color:#555; }
-        body.light .skill-pill:hover { border-color:rgba(255,90,48,0.5);color:#ff5a30; }
-        body.light .prof-track { background:rgba(0,0,0,0.08); }
-        body.light .skill-desc { color:#555; }
-        body.light .skill-badge { background:rgba(0,0,0,0.06);color:#444;border-color:rgba(0,0,0,0.1); }
-        body.light .section-label { color:#999; }
-        body.light .footer-marquee span { color:rgba(0,0,0,0.05); }
-        body.light footer { border-top-color:rgba(0,0,0,0.1); }
-        body.light .hero-eyebrow { border-color:rgba(0,0,0,0.12);background:rgba(0,0,0,0.04); }
+        .footer-brand { color:var(--text-primary); }
+        .footer-copy { color:var(--text-faint); font-family:'JetBrains Mono',monospace; }
+        .footer-social { color:var(--text-faint); }
+        .footer-social:hover { color:#BAC095; }
 
-        /* ═══════════════════════════════════════
-           RESPONSIVE FIXES
-        ═══════════════════════════════════════ */
-
-        /* Container base padding so it never bleeds edge-to-edge */
-        .container { padding-left: 1.25rem; padding-right: 1.25rem; }
-        @media (min-width: 640px)  { .container { padding-left: 2rem; padding-right: 2rem; } }
-        @media (min-width: 1024px) { .container { padding-left: 2.5rem; padding-right: 2.5rem; } }
-
-        /* Nav brand scales down on mobile */
-        .nav-brand h1 { font-size: clamp(1.75rem, 7vw, 3.125rem); }
-
-        /* Theme toggle: move left on small screens so it doesn't clash with burger */
-        @media (max-width: 767px) {
-            #theme-toggle { top: auto; bottom: 1.25rem; right: 1.25rem; }
+        /* Footer availability badge */
+        footer .inline-flex.items-center.gap-2.px-3 {
+            border: 1px solid var(--border-soft) !important;
+            background: rgba(54,53,50,0.04) !important;
         }
+        footer .font-mono.text-white\/50 { color: var(--text-muted) !important; }
+        footer p.text-white\/40 { color: var(--text-muted) !important; }
+        footer .font-mono.text-white\/25 { color: var(--text-faint) !important; }
 
-        /* Hero section: clip overflow on mobile to stop orbs causing horizontal scroll */
-        .hero-section-wrap { overflow: hidden; }
+        /* ── THEME TOGGLE ── */
+        #theme-toggle { border-color: var(--border-soft) !important; background: rgba(54,53,50,0.06) !important; }
 
-        /* Hero orbs: scale down and reposition on mobile */
-        @media (max-width: 639px) {
-            .hero-bg-orb:nth-child(1) { width: 260px !important; height: 260px !important; top: -60px !important; left: -80px !important; }
-            .hero-bg-orb:nth-child(2) { width: 180px !important; height: 180px !important; bottom: -30px !important; right: -50px !important; }
-        }
-
-        /* Hero stats row: tighter gap on tiny screens */
-        .hero-stats-row { gap: clamp(1rem, 5vw, 2rem); }
-
-        /* Hero image: smaller on very small phones */
-        @media (max-width: 400px) {
-            .hero-img { width: 11rem !important; height: 14rem !important; }
-        }
-
-        /* Hero rings: hide outermost two rings on mobile (they overflow) */
-        @media (max-width: 639px) {
-            .hero-ring:nth-child(2),
-            .hero-ring:nth-child(3) { display: none; }
-        }
-
-        /* Skills heading: smaller on mobile */
-        .skills-heading { font-size: clamp(1.5rem, 5vw, 2.25rem); }
-
-        /* Card grid: never let cards be narrower than 260px */
-        .skills-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
-
-        /* Card 3 span fix: on sm it spans 2 cols only if there are 2 cols */
-        @media (min-width: 640px) and (max-width: 1023px) {
-            #skill-card-3 { grid-column: span 2; }
-        }
-        @media (max-width: 639px) {
-            #skill-card-3 { grid-column: span 1; }
-        }
-
-        /* Footer marquee: scale font down on mobile */
-        .footer-marquee span { font-size: clamp(2rem, 8vw, 4.5rem); }
-        @media (max-width: 639px) {
-            .footer-marquee { gap: 1.5rem; }
-        }
-
-        /* Footer brand + links: stack better on tiny screens */
-        @media (max-width: 400px) {
-            .footer-brand { font-size: 1.1rem; }
-            .footer-links-list { gap: 0.75rem; font-size: 0.75rem; }
-        }
-
-        /* Social icons row: tighter on small screens */
-        @media (max-width: 400px) {
-            .footer-social-row { gap: 1.25rem; }
-            .footer-social svg { width: 1.35rem; height: 1.35rem; }
-        }
-
-        /* Loader progress bar: full width on very small screens */
-        #loader-bar-wrap { width: min(280px, 70vw); }
-
-        /* Disable hover-only effects on touch devices (prevents sticky hover state) */
-        @media (hover: none) {
-            .skill-card:hover .banner-img { transform: none; }
-            .skill-card:hover .card-border-chase::before { animation-play-state: paused; opacity: 0; }
-            .skill-card:hover .card-scanline { opacity: 0; animation: none; }
-            .skill-card:hover .card-orb { opacity: 0; }
-            .skill-card:hover .card-title-glitch::before,
-            .skill-card:hover .card-title-glitch::after { animation: none; opacity: 0; }
-            .nav-links-item:hover::after { width: 0; }
-        }
-
-        /* ═══════════════════════════════════════
-           LOADER — simple & funny
-        ═══════════════════════════════════════ */
+        /* ── LOADER ── */
         #loader {
             position: fixed; inset: 0; z-index: 99999;
-            background: #0a0a0a;
+            background: var(--bg-primary);
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
-            gap: 1.5rem;
+            gap: 0;
         }
 
-        /* The bouncing emoji */
-        #loader-emoji {
-            font-size: clamp(3rem, 10vw, 5rem);
-            display: block;
-            filter: drop-shadow(0 0 20px rgba(255,90,48,0.4));
+        /* Large name wordmark */
+        #loader-name {
+            font-family: 'Vif', sans-serif;
+            font-weight: 800;
+            font-size: clamp(2.2rem, 8vw, 4.5rem);
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+            line-height: 1;
+            opacity: 0;
+            transform: translateY(16px);
+        }
+        #loader-name span { color: var(--accent); }
+
+        /* Thin horizontal rule beneath the name */
+        #loader-rule {
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            margin-top: 1.25rem;
         }
 
-        /* Funny rotating messages */
-        #loader-msg {
+        /* Role label */
+        #loader-role {
             font-family: 'JetBrains Mono', monospace;
-            font-size: clamp(0.7rem, 2.5vw, 0.85rem);
-            color: rgba(255,255,255,0.45);
-            letter-spacing: 0.05em;
-            text-align: center;
-            min-height: 1.4em;
-            padding: 0 1.5rem;
+            font-size: clamp(0.6rem, 2vw, 0.72rem);
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+            margin-top: 1rem;
+            opacity: 0;
         }
 
-        /* Thin progress bar */
-        #loader-bar-wrap {
-            width: min(280px, 70vw);
-            height: 2px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 99px;
-            overflow: hidden;
-        }
-        #loader-bar {
-            height: 100%; width: 0%;
-            background: #ff5a30;
-            border-radius: 99px;
-            box-shadow: 0 0 8px #ff5a30;
+        /* Progress bar — very thin, at the very bottom of the screen */
+        #loader-progress {
+            position: absolute;
+            bottom: 0; left: 0;
+            height: 1px;
+            width: 0%;
+            background: var(--accent);
+            transition: width 0.05s linear;
         }
 
-        /* Tiny pct label */
-        #loader-pct {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            color: rgba(255,255,255,0.2);
-            letter-spacing: 0.12em;
-        }
-        #loader-pct b { color: #ff5a30; font-weight: 500; }
-
-        /* Keep site hidden during load */
         body.loading header,
         body.loading main,
         body.loading footer,
-        body.loading #theme-toggle { visibility: hidden; }
+        body.loading #theme-toggle { visibility:hidden; }
+
+        /* ── SECTION LABEL ── */
+        .section-label { color: var(--text-faint) !important; }
+
+        /* ── SKILLS HEADING ── */
+        .skills-heading { color: var(--text-primary); font-size:clamp(1.5rem,5vw,2.25rem); }
+
+        /* ── NAV BRAND ── */
+        .nav-brand h1 { color:var(--text-primary);font-size:clamp(1.75rem,7vw,3.125rem); }
+
+        /* ══════════════════════════
+           RESPONSIVE
+        ══════════════════════════ */
+        .container { padding-left:1.25rem;padding-right:1.25rem; }
+        @media (min-width:640px)  { .container { padding-left:2rem;padding-right:2rem; } }
+        @media (min-width:1024px) { .container { padding-left:2.5rem;padding-right:2.5rem; } }
+
+        .hero-section-wrap { overflow:hidden; }
+        .hero-stats-row { gap:clamp(1rem,5vw,2rem); }
+        .skills-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr)); }
+
+        @media (max-width:639px) {
+            .hero-bg-orb:nth-child(1){width:260px!important;height:260px!important;top:-60px!important;left:-80px!important;}
+            .hero-bg-orb:nth-child(2){width:180px!important;height:180px!important;bottom:-30px!important;right:-50px!important;}
+            .hero-ring:nth-child(2),.hero-ring:nth-child(3){display:none;}
+            .footer-marquee{gap:1.5rem;}
+        }
+        @media (min-width:640px) and (max-width:1023px) { #skill-card-3{grid-column:span 2;} }
+        @media (max-width:639px) { #skill-card-3{grid-column:span 1;} }
+        @media (max-width:400px) {
+            .hero-img{width:11rem!important;height:14rem!important;}
+            .footer-brand{font-size:1.1rem;}
+            .footer-social svg{width:1.35rem;height:1.35rem;}
+        }
+        @media (max-width:767px) { #theme-toggle{top:auto;bottom:1.25rem;right:1.25rem;} }
+
+        /* Touch device — disable hover-only FX */
+        @media (hover:none) {
+            .skill-card:hover .banner-img{transform:none;}
+            .skill-card:hover .card-border-chase::before{animation-play-state:paused;opacity:0;}
+            .skill-card:hover .card-scanline{opacity:0;animation:none;}
+            .skill-card:hover .card-orb{opacity:0;}
+            .skill-card:hover .card-title-glitch::before,
+            .skill-card:hover .card-title-glitch::after{animation:none;opacity:0;}
+            .nav-links-item:hover::after{width:0;}
+        }
     </style>
 </head>
-<body class="text-white min-h-screen loading">
+<body style="color: #363532;" class="min-h-screen loading">
 
     <!-- ===== LOADER ===== -->
     <div id="loader">
-        <span id="loader-emoji">👨‍💻</span>
-        <div id="loader-msg">warming up the coffee machine...</div>
-        <div id="loader-bar-wrap"><div id="loader-bar"></div></div>
-        <div id="loader-pct"><b id="loader-num">0</b>%</div>
+        <div id="loader-name">Dandy<span> Sherpa</span></div>
+        <div id="loader-rule"></div>
+        <div id="loader-role">Full‑Stack Developer</div>
+        <div id="loader-progress"></div>
     </div>
 
     <!-- ===== HEADER ===== -->
     <header id="main-header" class="relative">
         <div class="nav-glow-line"></div>
-        <nav class="container flex justify-between items-center text-white py-4 sm:py-5">
+        <nav class="container flex justify-between items-center py-4 sm:py-5">
 
             <!-- Brand -->
             <div class="nav-brand brand relative">
-                <h1 class="font-bold cursor-pointer select-none leading-none" style="font-size:clamp(1.75rem,7vw,3.125rem);">PORT<span class="text-[#ff5a30]">folio</span></h1>
-                <div id="brand-underline" class="absolute -bottom-1 left-0 h-[2px] w-0 bg-[#ff5a30]" style="transition:width 0.4s ease;"></div>
+                <h1 class="font-bold cursor-pointer select-none leading-none">PORT<span style="color:#BAC095;">folio</span></h1>
+                <div id="brand-underline" class="absolute -bottom-1 left-0 h-[2px] w-0" style="background:#BAC095;transition:width 0.4s ease;"></div>
             </div>
 
             <!-- Desktop links -->
             <div class="hidden md:flex gap-8 text-sm tracking-wide">
-                <a href="#" class="nav-links-item hover:text-[#ff5a30] transition-colors duration-200">Home</a>
-                <a href="#skills" class="nav-links-item hover:text-[#ff5a30] transition-colors duration-200">Skills</a>
-                <a href="#" class="nav-links-item hover:text-[#ff5a30] transition-colors duration-200">Projects</a>
-                <a href="#" class="nav-links-item hover:text-[#ff5a30] transition-colors duration-200">Contact</a>
+                <a href="#" class="nav-links-item transition-colors duration-200">Home</a>
+                <a href="#skills" class="nav-links-item transition-colors duration-200">Skills</a>
+                <a href="#" class="nav-links-item transition-colors duration-200">Projects</a>
+                <a href="#" class="nav-links-item transition-colors duration-200">Contact</a>
             </div>
 
-            <!-- Hamburger — moved to right, higher z-index, larger tap target -->
+            <!-- Hamburger -->
             <button id="burger-btn" class="md:hidden relative z-[200] flex flex-col justify-center gap-[5px] cursor-pointer p-3 -mr-3" aria-label="Toggle menu" type="button">
-                <span class="burger-line block w-6 h-[2px] bg-white rounded-full origin-center"></span>
-                <span class="burger-line block w-6 h-[2px] bg-white rounded-full origin-center"></span>
-                <span class="burger-line block w-6 h-[2px] bg-white rounded-full origin-center"></span>
+                <span class="burger-line block w-6 h-[2px] rounded-full origin-center"></span>
+                <span class="burger-line block w-6 h-[2px] rounded-full origin-center"></span>
+                <span class="burger-line block w-6 h-[2px] rounded-full origin-center"></span>
             </button>
         </nav>
 
-        <!-- Mobile menu — lives inside header so sticky positioning keeps it attached -->
-        <div id="mobile-menu" class="bg-black/95 backdrop-blur-xl border-t border-white/5 md:hidden">
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden">
             <div class="container flex flex-col py-2">
-                <a href="#"      class="mobile-link group flex items-center gap-3 py-4 px-1 text-base font-semibold text-white/80 hover:text-[#ff5a30] transition-colors duration-200 border-b border-white/5">
-                    <span class="w-1 h-4 rounded-full bg-[#ff5a30] opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>Home
+                <a href="#"      class="mobile-link group flex items-center gap-3 py-4 px-1 text-base font-semibold transition-colors duration-200 border-b">
+                    <span class="w-1 h-4 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200" style="background:#BAC095;"></span>Home
                 </a>
-                <a href="#skills" class="mobile-link group flex items-center gap-3 py-4 px-1 text-base font-semibold text-white/80 hover:text-[#ff5a30] transition-colors duration-200 border-b border-white/5">
-                    <span class="w-1 h-4 rounded-full bg-[#ff5a30] opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>Skills
+                <a href="#skills" class="mobile-link group flex items-center gap-3 py-4 px-1 text-base font-semibold transition-colors duration-200 border-b">
+                    <span class="w-1 h-4 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200" style="background:#BAC095;"></span>Skills
                 </a>
-                <a href="#"      class="mobile-link group flex items-center gap-3 py-4 px-1 text-base font-semibold text-white/80 hover:text-[#ff5a30] transition-colors duration-200 border-b border-white/5">
-                    <span class="w-1 h-4 rounded-full bg-[#ff5a30] opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>Projects
+                <a href="#"      class="mobile-link group flex items-center gap-3 py-4 px-1 text-base font-semibold transition-colors duration-200 border-b">
+                    <span class="w-1 h-4 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200" style="background:#BAC095;"></span>Projects
                 </a>
-                <a href="#"      class="mobile-link group flex items-center gap-3 py-4 px-1 text-base font-semibold text-white/80 hover:text-[#ff5a30] transition-colors duration-200">
-                    <span class="w-1 h-4 rounded-full bg-[#ff5a30] opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>Contact
+                <a href="#"      class="mobile-link group flex items-center gap-3 py-4 px-1 text-base font-semibold transition-colors duration-200">
+                    <span class="w-1 h-4 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200" style="background:#BAC095;"></span>Contact
                 </a>
             </div>
         </div>
@@ -393,36 +429,36 @@
         <section class="container relative mt-16 flex flex-col-reverse md:flex-row items-center gap-12 pb-24" style="overflow:visible;">
 
             <!-- Ambient orbs -->
-            <div class="hero-bg-orb" style="width:500px;height:500px;background:#ff5a30;top:-100px;left:-150px;"></div>
+            <div class="hero-bg-orb" style="width:500px;height:500px;background:#BAC095;top:-100px;left:-150px;"></div>
             <div class="hero-bg-orb" style="width:300px;height:300px;background:#7c3aed;bottom:-50px;right:-100px;"></div>
 
             <div class="flex-1 text-center md:text-left relative z-10">
 
                 <!-- Eyebrow badge -->
-                <div class="hero-eyebrow inline-flex items-center gap-2 mb-5 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
-                    <span class="w-2 h-2 rounded-full bg-[#ff5a30] animate-pulse"></span>
-                    <span class="font-mono text-[11px] text-white/60 tracking-widest uppercase">Available for work</span>
+                <div class="hero-eyebrow inline-flex items-center gap-2 mb-5 px-3 py-1.5 rounded-full">
+                    <span class="w-2 h-2 rounded-full animate-pulse" style="background:#BAC095;"></span>
+                    <span class="font-mono text-[11px] tracking-widest uppercase" style="color:var(--text-muted);">Available for work</span>
                 </div>
 
-                <h1 class="hero-heading text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight text-white mb-6">
+                <h1 class="hero-heading text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-6">
                     Hi, I'm<br>
-                    <span class="text-[#ff5a30]">Dandy Sherpa.</span><br>
-                    <span class="text-white/60 text-3xl sm:text-4xl font-bold">Junior Full-Stack Dev<span class="typewriter-cursor"></span></span>
+                    <span style="color:#BAC095;">Dandy Sherpa.</span><br>
+                    <span style="color:var(--text-muted);font-size:clamp(1.5rem,4vw,2.5rem);font-weight:700;">Junior Full-Stack Dev<span class="typewriter-cursor"></span></span>
                 </h1>
 
-                <p class="hero-sub text-white/55 text-base sm:text-lg font-light leading-relaxed mb-8 max-w-md mx-auto md:mx-0">
+                <p class="hero-sub text-base sm:text-lg font-light leading-relaxed mb-8 max-w-md mx-auto md:mx-0">
                     I love building intuitive web applications, solving problems, and turning ideas into functional, user-friendly experiences with Laravel and modern web technologies.
                 </p>
 
                 <!-- CTA pair -->
                 <div class="flex flex-col sm:flex-row gap-3 justify-center md:justify-start mb-10">
-                    <button type="button" class="hero-btn inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#ff5a30] text-[#ff5a30] rounded text-sm cursor-pointer transition-all duration-200 hover:bg-[#ff5a30] hover:text-white group">
+                    <button type="button" class="hero-btn inline-flex items-center justify-center gap-2 px-6 py-3 rounded text-sm cursor-pointer group">
                         Read more
                         <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" viewBox="0 0 14 14" fill="none">
                             <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
-                    <button type="button" class="hero-btn-2 inline-flex items-center justify-center gap-2 px-6 py-3 bg-white/5 border border-white/10 text-white/70 rounded text-sm cursor-pointer transition-all duration-200 hover:bg-white/10 hover:text-white">
+                    <button type="button" class="hero-btn-2 inline-flex items-center justify-center gap-2 px-6 py-3 rounded text-sm cursor-pointer">
                         Download CV
                         <svg class="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none"><path d="M7 2v7M4 6l3 3 3-3M2 12h10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </button>
@@ -431,16 +467,16 @@
                 <!-- Stats -->
                 <div class="hero-stats-row flex justify-center md:justify-start">
                     <div class="hero-stat text-center md:text-left">
-                        <div class="text-2xl font-bold text-white font-mono stat-num" data-target="2">0</div>
-                        <div class="text-xs text-white/40 tracking-wide uppercase mt-0.5">Years exp.</div>
+                        <div class="text-2xl font-bold font-mono stat-num" data-target="2">0</div>
+                        <div class="text-xs tracking-wide uppercase mt-0.5" style="color:var(--text-faint);">Years exp.</div>
                     </div>
                     <div class="hero-stat text-center md:text-left">
-                        <div class="text-2xl font-bold text-white font-mono stat-num" data-target="12">0</div>
-                        <div class="text-xs text-white/40 tracking-wide uppercase mt-0.5">Projects</div>
+                        <div class="text-2xl font-bold font-mono stat-num" data-target="12">0</div>
+                        <div class="text-xs tracking-wide uppercase mt-0.5" style="color:var(--text-faint);">Projects</div>
                     </div>
                     <div class="hero-stat text-center md:text-left">
-                        <div class="text-2xl font-bold text-white font-mono stat-num" data-target="5">0</div>
-                        <div class="text-xs text-white/40 tracking-wide uppercase mt-0.5">Tech stacks</div>
+                        <div class="text-2xl font-bold font-mono stat-num" data-target="5">0</div>
+                        <div class="text-xs tracking-wide uppercase mt-0.5" style="color:var(--text-faint);">Tech stacks</div>
                     </div>
                 </div>
             </div>
@@ -448,12 +484,12 @@
             <!-- Hero image -->
             <div class="hero-img relative w-56 h-72 sm:w-64 sm:h-80 shrink-0 z-10">
                 <div class="hero-ring absolute" style="inset:-20px;"></div>
-                <div class="hero-ring absolute" style="inset:-38px;animation-delay:1s;opacity:0.15;"></div>
-                <div class="hero-ring absolute" style="inset:-56px;animation-delay:2s;opacity:0.07;"></div>
+                <div class="hero-ring absolute" style="inset:-38px;animation-delay:1s;opacity:0.12;"></div>
+                <div class="hero-ring absolute" style="inset:-56px;animation-delay:2s;opacity:0.06;"></div>
                 <div class="hero-img-glow"></div>
-                <div class="absolute -bottom-2 -right-2 w-full h-full rounded-xl border border-[#ff5a30]"></div>
-                <div class="absolute inset-0 rounded-xl border border-white/10 overflow-hidden bg-neutral-800">
-                    <img src="/images/DSC01049-removebg-preview.png" alt="Dandy Sherpa" class="w-full h-full object-cover object-top"/>
+                <div class="absolute -bottom-2 -right-2 w-full h-full rounded-xl border" style="border-color:#BAC095;"></div>
+                <div class="absolute inset-0 rounded-xl overflow-hidden" style="border:1px solid var(--border-soft);background:var(--bg-secondary);">
+                    <img src="/images/llxvisuals-eSLJG0y5S4U-unsplash.jpg" alt="Dandy Sherpa" class="w-full h-full object-cover object-top"/>
                 </div>
             </div>
 
@@ -464,14 +500,14 @@
                 <div class="scroll-dot"></div>
             </div>
         </section>
-        </div><!-- end hero-section-wrap -->
+        </div>
 
         <!-- ===== SKILLS ===== -->
         <section id="skills" class="container pb-28">
             <div class="mb-12 text-center md:text-left">
-                <p class="section-label font-mono text-[11px] tracking-widest text-white/30 uppercase mb-2">Tech Stack</p>
-                <h2 class="skills-heading font-bold text-white">
-                    Skills &amp; <span class="text-[#ff5a30]">Expertise</span>
+                <p class="section-label font-mono text-[11px] tracking-widest uppercase mb-2">Tech Stack</p>
+                <h2 class="skills-heading font-bold">
+                    Skills &amp; <span style="color:#BAC095;">Expertise</span>
                 </h2>
             </div>
 
@@ -486,38 +522,38 @@
                     <div class="corner-dot" style="bottom:6px;right:6px;"></div>
                     <div class="card-orb" style="width:120px;height:120px;background:#ff2d20;top:-30px;right:-20px;"></div>
                     <div class="card-scanline"></div>
-                    <div class="skill-card-inner relative z-10 rounded-2xl overflow-hidden border border-white/10 bg-[#111111] transition-colors duration-300 group-hover:border-white/20">
+                    <div class="skill-card-inner relative z-10 rounded-2xl overflow-hidden border transition-colors duration-300">
                         <div class="relative h-44 overflow-hidden">
                             <img class="banner-img w-full h-full object-cover" src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=600&q=80" alt="Laravel"/>
-                            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/75"></div>
+                            <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent,rgba(54,53,50,0.15),rgba(54,53,50,0.60));"></div>
                             <div class="banner-shimmer"></div>
                             <div class="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
-                                <span class="skill-badge font-mono text-[10px] px-2 py-1 rounded-full bg-white/10 text-white/60 border border-white/10 backdrop-blur-sm">PHP</span>
-                                <span class="skill-badge font-mono text-[10px] px-2 py-1 rounded-full bg-white/10 text-white/60 border border-white/10 backdrop-blur-sm">REST API</span>
-                                <span class="skill-badge font-mono text-[10px] px-2 py-1 rounded-full bg-white/10 text-white/60 border border-white/10 backdrop-blur-sm">MySQL</span>
+                                <span class="skill-badge font-mono text-[10px] px-2 py-1 rounded-full">PHP</span>
+                                <span class="skill-badge font-mono text-[10px] px-2 py-1 rounded-full">REST API</span>
+                                <span class="skill-badge font-mono text-[10px] px-2 py-1 rounded-full">MySQL</span>
                             </div>
                         </div>
                         <div class="p-5">
                             <div class="flex items-center gap-3 mb-4">
-                                <div class="logo-icon-wrap w-11 h-11 rounded-xl bg-[#ff2d20]/10 border border-white/10 flex items-center justify-center shrink-0">
+                                <div class="logo-icon-wrap w-11 h-11 rounded-xl border flex items-center justify-center shrink-0" style="background:rgba(255,45,32,0.08);border-color:var(--border-soft);">
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/9/9a/Laravel.svg" alt="Laravel" class="w-7 h-7 object-contain card-logo"/>
                                 </div>
-                                <h3 class="card-title-glitch text-white text-lg font-bold" data-text="Laravel" style="font-family:'Syne',sans-serif;">Laravel</h3>
+                                <h3 class="card-title-glitch text-lg font-bold" data-text="Laravel">Laravel</h3>
                             </div>
-                            <p class="skill-desc text-white/50 text-sm leading-relaxed mb-4">Full-stack PHP framework for building robust web apps with elegant syntax, MVC architecture, and powerful tooling.</p>
+                            <p class="skill-desc text-sm leading-relaxed mb-4">Full-stack PHP framework for building robust web apps with elegant syntax, MVC architecture, and powerful tooling.</p>
                             <div class="flex flex-wrap gap-2 mb-5">
-                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border border-white/10 text-white/50">Eloquent ORM</span>
-                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border border-white/10 text-white/50">Blade</span>
-                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border border-white/10 text-white/50">Livewire</span>
-                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border border-white/10 text-white/50">Artisan CLI</span>
-                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border border-white/10 text-white/50">Queues</span>
+                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border">Eloquent ORM</span>
+                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border">Blade</span>
+                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border">Livewire</span>
+                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border">Artisan CLI</span>
+                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border">Queues</span>
                             </div>
                             <div class="flex items-center gap-3">
-                                <span class="font-mono text-[10px] text-white/30 uppercase tracking-widest w-12">Level</span>
-                                <div class="prof-track flex-1 h-[3px] rounded-full bg-white/10 overflow-hidden">
-                                    <div class="prof-fill bg-[#ff2d20]" data-width="78" style="color:#ff2d20;"></div>
+                                <span class="font-mono text-[10px] uppercase tracking-widest w-12" style="color:var(--text-faint);">Level</span>
+                                <div class="prof-track flex-1 h-[3px] rounded-full overflow-hidden">
+                                    <div class="prof-fill" data-width="78" style="background:#ff2d20;color:#ff2d20;"></div>
                                 </div>
-                                <span class="prof-pct font-mono text-[11px] font-medium text-[#ff2d20] w-8 text-right" data-target="78">0%</span>
+                                <span class="prof-pct font-mono text-[11px] font-medium w-8 text-right" data-target="78" style="color:#ff2d20;">0%</span>
                             </div>
                         </div>
                     </div>
@@ -532,38 +568,38 @@
                     <div class="corner-dot" style="bottom:6px;right:6px;"></div>
                     <div class="card-orb" style="width:140px;height:140px;background:#f7df1e;bottom:-40px;left:-30px;"></div>
                     <div class="card-scanline"></div>
-                    <div class="skill-card-inner relative z-10 rounded-2xl overflow-hidden border border-white/10 bg-[#111111] transition-colors duration-300 group-hover:border-white/20">
+                    <div class="skill-card-inner relative z-10 rounded-2xl overflow-hidden border transition-colors duration-300">
                         <div class="relative h-44 overflow-hidden">
                             <img class="banner-img w-full h-full object-cover" src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&q=80" alt="JavaScript"/>
-                            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/75"></div>
+                            <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent,rgba(54,53,50,0.15),rgba(54,53,50,0.60));"></div>
                             <div class="banner-shimmer"></div>
                             <div class="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
-                                <span class="skill-badge font-mono text-[10px] px-2 py-1 rounded-full bg-white/10 text-white/60 border border-white/10 backdrop-blur-sm">ES2024</span>
-                                <span class="skill-badge font-mono text-[10px] px-2 py-1 rounded-full bg-white/10 text-white/60 border border-white/10 backdrop-blur-sm">Node.js</span>
-                                <span class="skill-badge font-mono text-[10px] px-2 py-1 rounded-full bg-white/10 text-white/60 border border-white/10 backdrop-blur-sm">Async</span>
+                                <span class="skill-badge font-mono text-[10px] px-2 py-1 rounded-full">ES2024</span>
+                                <span class="skill-badge font-mono text-[10px] px-2 py-1 rounded-full">Node.js</span>
+                                <span class="skill-badge font-mono text-[10px] px-2 py-1 rounded-full">Async</span>
                             </div>
                         </div>
                         <div class="p-5">
                             <div class="flex items-center gap-3 mb-4">
-                                <div class="logo-icon-wrap w-11 h-11 rounded-xl bg-[#f7df1e]/10 border border-white/10 flex items-center justify-center shrink-0">
+                                <div class="logo-icon-wrap w-11 h-11 rounded-xl border flex items-center justify-center shrink-0" style="background:rgba(247,223,30,0.10);border-color:var(--border-soft);">
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" alt="JavaScript" class="w-7 h-7 object-contain card-logo"/>
                                 </div>
-                                <h3 class="card-title-glitch text-white text-lg font-bold" data-text="JavaScript" style="font-family:'Syne',sans-serif;">JavaScript</h3>
+                                <h3 class="card-title-glitch text-lg font-bold" data-text="JavaScript">JavaScript</h3>
                             </div>
-                            <p class="skill-desc text-white/50 text-sm leading-relaxed mb-4">The language of the web — from DOM manipulation to async patterns, closures, and modern ES2024+ features.</p>
+                            <p class="skill-desc text-sm leading-relaxed mb-4">The language of the web — from DOM manipulation to async patterns, closures, and modern ES2024+ features.</p>
                             <div class="flex flex-wrap gap-2 mb-5">
-                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border border-white/10 text-white/50">Closures</span>
-                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border border-white/10 text-white/50">Promises</span>
-                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border border-white/10 text-white/50">GSAP</span>
-                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border border-white/10 text-white/50">Fetch API</span>
-                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border border-white/10 text-white/50">Modules</span>
+                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border">Closures</span>
+                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border">Promises</span>
+                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border">GSAP</span>
+                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border">Fetch API</span>
+                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border">Modules</span>
                             </div>
                             <div class="flex items-center gap-3">
-                                <span class="font-mono text-[10px] text-white/30 uppercase tracking-widest w-12">Level</span>
-                                <div class="prof-track flex-1 h-[3px] rounded-full bg-white/10 overflow-hidden">
-                                    <div class="prof-fill bg-[#f7df1e]" data-width="72" style="color:#f7df1e;"></div>
+                                <span class="font-mono text-[10px] uppercase tracking-widest w-12" style="color:var(--text-faint);">Level</span>
+                                <div class="prof-track flex-1 h-[3px] rounded-full overflow-hidden">
+                                    <div class="prof-fill" data-width="72" style="background:#f7df1e;color:#f7df1e;"></div>
                                 </div>
-                                <span class="prof-pct font-mono text-[11px] font-medium text-[#d4bc00] w-8 text-right" data-target="72">0%</span>
+                                <span class="prof-pct font-mono text-[11px] font-medium w-8 text-right" data-target="72" style="color:#d4bc00;">0%</span>
                             </div>
                         </div>
                     </div>
@@ -578,44 +614,44 @@
                     <div class="corner-dot" style="bottom:6px;right:6px;"></div>
                     <div class="card-orb" style="width:100px;height:100px;background:#38bdf8;top:-20px;left:50%;transform:translateX(-50%);"></div>
                     <div class="card-scanline"></div>
-                    <div class="skill-card-inner relative z-10 rounded-2xl overflow-hidden border border-white/10 bg-[#111111] transition-colors duration-300 group-hover:border-white/20">
+                    <div class="skill-card-inner relative z-10 rounded-2xl overflow-hidden border transition-colors duration-300">
                         <div class="relative h-44 overflow-hidden">
                             <img class="banner-img w-full h-full object-cover" src="https://images.unsplash.com/photo-1618477388954-7852f32655ec?w=600&q=80" alt="Frontend"/>
-                            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/75"></div>
+                            <div class="absolute inset-0" style="background:linear-gradient(to bottom,transparent,rgba(54,53,50,0.15),rgba(54,53,50,0.60));"></div>
                             <div class="banner-shimmer"></div>
                             <div class="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
-                                <span class="skill-badge font-mono text-[10px] px-2 py-1 rounded-full bg-white/10 text-white/60 border border-white/10 backdrop-blur-sm">React</span>
-                                <span class="skill-badge font-mono text-[10px] px-2 py-1 rounded-full bg-white/10 text-white/60 border border-white/10 backdrop-blur-sm">Next.js</span>
-                                <span class="skill-badge font-mono text-[10px] px-2 py-1 rounded-full bg-white/10 text-white/60 border border-white/10 backdrop-blur-sm">Tailwind</span>
+                                <span class="skill-badge font-mono text-[10px] px-2 py-1 rounded-full">React</span>
+                                <span class="skill-badge font-mono text-[10px] px-2 py-1 rounded-full">Next.js</span>
+                                <span class="skill-badge font-mono text-[10px] px-2 py-1 rounded-full">Tailwind</span>
                             </div>
                         </div>
                         <div class="p-5">
                             <div class="flex items-center gap-2 mb-3">
-                                <div class="logo-icon-wrap w-10 h-10 rounded-xl bg-[#20232a] border border-white/10 flex items-center justify-center shrink-0">
+                                <div class="logo-icon-wrap w-10 h-10 rounded-xl border flex items-center justify-center shrink-0" style="background:#e8f0e8;border-color:var(--border-soft);">
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React" class="w-6 h-6 object-contain card-logo"/>
                                 </div>
-                                <div class="logo-icon-wrap w-10 h-10 rounded-xl bg-black border border-white/10 flex items-center justify-center shrink-0">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/Nextjs-logo.svg" alt="Next.js" class="w-6 h-6 object-contain invert card-logo"/>
+                                <div class="logo-icon-wrap w-10 h-10 rounded-xl border flex items-center justify-center shrink-0" style="background:var(--bg-secondary);border-color:var(--border-soft);">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/Nextjs-logo.svg" alt="Next.js" class="w-6 h-6 object-contain card-logo" style="filter:invert(0.7);"/>
                                 </div>
-                                <div class="logo-icon-wrap w-10 h-10 rounded-xl bg-[#0f172a] border border-white/10 flex items-center justify-center shrink-0">
+                                <div class="logo-icon-wrap w-10 h-10 rounded-xl border flex items-center justify-center shrink-0" style="background:#e8f4fa;border-color:var(--border-soft);">
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" alt="Tailwind" class="w-6 h-6 object-contain card-logo"/>
                                 </div>
                             </div>
-                            <h3 class="card-title-glitch text-white text-lg font-bold mb-4" data-text="React · Next.js · Tailwind" style="font-family:'Syne',sans-serif;">React · Next.js · Tailwind</h3>
-                            <p class="skill-desc text-white/50 text-sm leading-relaxed mb-4">Modern frontend trio — component-driven UIs with React, SSR &amp; routing with Next.js, and utility-first styling with Tailwind.</p>
+                            <h3 class="card-title-glitch text-lg font-bold mb-4" data-text="React · Next.js · Tailwind">React · Next.js · Tailwind</h3>
+                            <p class="skill-desc text-sm leading-relaxed mb-4">Modern frontend trio — component-driven UIs with React, SSR &amp; routing with Next.js, and utility-first styling with Tailwind.</p>
                             <div class="flex flex-wrap gap-2 mb-5">
-                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border border-white/10 text-white/50">Hooks</span>
-                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border border-white/10 text-white/50">App Router</span>
-                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border border-white/10 text-white/50">SSR / SSG</span>
-                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border border-white/10 text-white/50">Responsive</span>
-                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border border-white/10 text-white/50">Animations</span>
+                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border">Hooks</span>
+                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border">App Router</span>
+                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border">SSR / SSG</span>
+                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border">Responsive</span>
+                                <span class="skill-pill font-mono text-[11px] px-3 py-1 rounded-full border">Animations</span>
                             </div>
                             <div class="flex items-center gap-3">
-                                <span class="font-mono text-[10px] text-white/30 uppercase tracking-widest w-12">Level</span>
-                                <div class="prof-track flex-1 h-[3px] rounded-full bg-white/10 overflow-hidden">
-                                    <div class="prof-fill bg-[#38bdf8]" data-width="65" style="color:#38bdf8;"></div>
+                                <span class="font-mono text-[10px] uppercase tracking-widest w-12" style="color:var(--text-faint);">Level</span>
+                                <div class="prof-track flex-1 h-[3px] rounded-full overflow-hidden">
+                                    <div class="prof-fill" data-width="65" style="background:#38bdf8;color:#38bdf8;"></div>
                                 </div>
-                                <span class="prof-pct font-mono text-[11px] font-medium text-[#38bdf8] w-8 text-right" data-target="65">0%</span>
+                                <span class="prof-pct font-mono text-[11px] font-medium w-8 text-right" data-target="65" style="color:#38bdf8;">0%</span>
                             </div>
                         </div>
                     </div>
@@ -626,10 +662,10 @@
     </main>
 
     <!-- ===== FOOTER ===== -->
-    <footer class="border-t border-white/10 mt-16 relative overflow-hidden">
+    <footer class="mt-16 relative overflow-hidden">
 
         <!-- Marquee strip -->
-        <div class="footer-marquee-wrap py-5 border-b border-white/5">
+        <div class="footer-marquee-wrap py-5">
             <div class="footer-marquee" id="footer-marquee">
                 <span>DANDY SHERPA</span><span>·</span><span>FULL STACK</span><span>·</span><span>LARAVEL</span><span>·</span><span>JAVASCRIPT</span><span>·</span><span>SYDNEY 2026</span><span>·</span>
                 <span>DANDY SHERPA</span><span>·</span><span>FULL STACK</span><span>·</span><span>LARAVEL</span><span>·</span><span>JAVASCRIPT</span><span>·</span><span>SYDNEY 2026</span><span>·</span>
@@ -638,100 +674,92 @@
 
         <div class="container pt-10 pb-8 relative z-10">
 
-            <!-- Top row: brand + tagline left, CTA right -->
             <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-8 mb-8">
 
                 <!-- Left: Brand + tagline -->
                 <div class="max-w-xs">
-                    <h2 class="footer-brand brand text-2xl font-bold cursor-pointer select-none mb-2">SYDNEY<span class="text-[#ff5a30]">2026</span></h2>
-                    <p class="text-white/40 text-sm leading-relaxed">Building clean, fast, full-stack web apps with Laravel &amp; modern JavaScript. Open to opportunities in Sydney &amp; remote.</p>
+                    <h2 class="footer-brand brand text-2xl font-bold cursor-pointer select-none mb-2">SYDNEY<span style="color:#BAC095;">2026</span></h2>
+                    <p class="text-sm leading-relaxed" style="color:var(--text-muted);">Building clean, fast, full-stack web apps with Laravel &amp; modern JavaScript. Open to opportunities in Sydney &amp; remote.</p>
                 </div>
 
-                <!-- Right: Two columns of useful links -->
+                <!-- Right: Link columns -->
                 <div class="flex flex-wrap gap-x-12 gap-y-6 text-sm">
-
-                    <!-- Work -->
                     <div>
-                        <p class="font-mono text-[10px] text-white/25 uppercase tracking-widest mb-3">Work</p>
+                        <p class="font-mono text-[10px] uppercase tracking-widest mb-3" style="color:var(--text-faint);">Work</p>
                         <ul class="flex flex-col gap-2">
-                            <li><a href="#" class="footer-link text-white/55 hover:text-[#ff5a30] transition-colors duration-200">Projects</a></li>
-                            <li><a href="#" class="footer-link text-white/55 hover:text-[#ff5a30] transition-colors duration-200">GitHub</a></li>
-                            <li><a href="#" class="footer-link text-white/55 hover:text-[#ff5a30] transition-colors duration-200">Live Demos</a></li>
+                            <li><a href="#" class="footer-link transition-colors duration-200">Projects</a></li>
+                            <li><a href="#" class="footer-link transition-colors duration-200">GitHub</a></li>
+                            <li><a href="#" class="footer-link transition-colors duration-200">Live Demos</a></li>
                         </ul>
                     </div>
-
-                    <!-- Me -->
                     <div>
-                        <p class="font-mono text-[10px] text-white/25 uppercase tracking-widest mb-3">Me</p>
+                        <p class="font-mono text-[10px] uppercase tracking-widest mb-3" style="color:var(--text-faint);">Me</p>
                         <ul class="flex flex-col gap-2">
-                            <li><a href="#skills" class="footer-link text-white/55 hover:text-[#ff5a30] transition-colors duration-200">Tech Stack</a></li>
-                            <li><a href="#" class="footer-link text-white/55 hover:text-[#ff5a30] transition-colors duration-200">Resume / CV</a></li>
-                            <li><a href="#" class="footer-link text-white/55 hover:text-[#ff5a30] transition-colors duration-200">About Me</a></li>
+                            <li><a href="#skills" class="footer-link transition-colors duration-200">Tech Stack</a></li>
+                            <li><a href="#" class="footer-link transition-colors duration-200">Resume / CV</a></li>
+                            <li><a href="#" class="footer-link transition-colors duration-200">About Me</a></li>
                         </ul>
                     </div>
-
-                    <!-- Connect -->
                     <div>
-                        <p class="font-mono text-[10px] text-white/25 uppercase tracking-widest mb-3">Connect</p>
+                        <p class="font-mono text-[10px] uppercase tracking-widest mb-3" style="color:var(--text-faint);">Connect</p>
                         <ul class="flex flex-col gap-2">
-                            <li><a href="https://linkedin.com/in/dandysherpa" target="_blank" class="footer-link text-white/55 hover:text-[#ff5a30] transition-colors duration-200">LinkedIn</a></li>
-                            <li><a href="https://instagram.com/jiiigme" target="_blank" class="footer-link text-white/55 hover:text-[#ff5a30] transition-colors duration-200">Instagram</a></li>
-                            <li><a href="/cdn-cgi/l/email-protection#43202c272a2d24342a372b27222d273a302b2631332203242e222a2f6d202c2e" class="footer-link text-white/55 hover:text-[#ff5a30] transition-colors duration-200">Email Me</a></li>
+                            <li><a href="https://linkedin.com/in/dandysherpa" target="_blank" class="footer-link transition-colors duration-200">LinkedIn</a></li>
+                            <li><a href="https://instagram.com/jiiigme" target="_blank" class="footer-link transition-colors duration-200">Instagram</a></li>
+                            <li><a href="mailto:codingwithdandysherpa@gmail.com" class="footer-link transition-colors duration-200">Email Me</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
 
             <!-- Availability badge -->
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 mb-8">
-                <span class="w-2 h-2 rounded-full bg-[#ff5a30] animate-pulse"></span>
-                <span class="font-mono text-[11px] text-white/50 tracking-widest">Available for freelance &amp; full-time roles · Sydney, AU</span>
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-8" style="border:1px solid var(--border-soft);background:rgba(54,53,50,0.04);">
+                <span class="w-2 h-2 rounded-full animate-pulse" style="background:#BAC095;"></span>
+                <span class="font-mono text-[11px] tracking-widest" style="color:var(--text-muted);">Available for freelance &amp; full-time roles · Sydney, AU</span>
             </div>
 
             <div class="footer-divider-line mb-6"></div>
 
-            <!-- Bottom row: social icons + copyright -->
+            <!-- Bottom row -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
 
-                <!-- Social icons — restored to original w-7 h-7 with full GSAP animations -->
+                <!-- Social icons -->
                 <div class="footer-social-row flex items-center gap-8">
-                    <a href="https://instagram.com/jiiigme" target="_blank" class="footer-social text-white/40 hover:text-[#ff5a30] transition-colors duration-200" aria-label="Instagram">
+                    <a href="https://instagram.com/jiiigme" target="_blank" class="footer-social transition-colors duration-200" aria-label="Instagram">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                     </a>
-                    <a href="https://linkedin.com/in/dandysherpa" target="_blank" class="footer-social text-white/40 hover:text-[#ff5a30] transition-colors duration-200" aria-label="LinkedIn">
+                    <a href="https://linkedin.com/in/dandysherpa" target="_blank" class="footer-social transition-colors duration-200" aria-label="LinkedIn">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"/></svg>
                     </a>
-                    <a href="mailto:codingwithdandysherpa@gmail.com" class="footer-social text-white/40 hover:text-[#ff5a30] transition-colors duration-200" aria-label="Email">
+                    <a href="mailto:codingwithdandysherpa@gmail.com" class="footer-social transition-colors duration-200" aria-label="Email">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.910 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
                     </a>
-                    <a href="https://github.com/codingwithdandysherpa" target="_blank" class="footer-social text-white/40 hover:text-[#ff5a30] transition-colors duration-200" aria-label="GitHub">
+                    <a href="https://github.com/codingwithdandysherpa" target="_blank" class="footer-social transition-colors duration-200" aria-label="GitHub">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.929.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
                     </a>
                 </div>
 
-                <!-- Copyright -->
-                <span class="footer-copy text-xs text-white/25 font-mono tracking-wide">© 2026 Dandy Sherpa — Built with Laravel &amp; ☕</span>
+                <span class="footer-copy text-xs tracking-wide">© 2026 Dandy Sherpa — Built with Laravel &amp; ☕</span>
             </div>
         </div>
     </footer>
 
     <!-- ===== THEME TOGGLE ===== -->
-    <button id="theme-toggle" class="fixed top-6 right-6 z-[99999] w-14 h-7 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm flex items-center px-1 cursor-pointer">
-        <div id="toggle-thumb" class="w-5 h-5 rounded-full bg-[#ff5a30] flex items-center justify-center text-[10px] shadow-lg">🌙</div>
+    <button id="theme-toggle" class="fixed top-6 right-6 z-[99999] w-14 h-7 rounded-full flex items-center px-1 cursor-pointer" style="border:1px solid var(--border-soft);background:rgba(54,53,50,0.06);">
+        <div id="toggle-thumb" class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] shadow-lg" style="background:#BAC095;">🌙</div>
     </button>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         gsap.registerPlugin(ScrollTrigger)
 
         // ═══════════════════════════════════════
         // GLOBAL CURSOR — spotlight + ripple ring
         // ═══════════════════════════════════════
         const pageSpotlight = document.createElement('div')
-        pageSpotlight.style.cssText = `position:fixed;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(255,90,48,0.04) 0%,transparent 70%);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);opacity:0;transition:opacity 0.3s;`
+        pageSpotlight.style.cssText = `position:fixed;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(186,192,149,0.05) 0%,transparent 70%);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);opacity:0;transition:opacity 0.3s;`
         document.body.appendChild(pageSpotlight)
 
         const rippleRing = document.createElement('div')
-        rippleRing.style.cssText = `position:fixed;width:20px;height:20px;border:1px solid rgba(255,90,48,0.6);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);opacity:0;`
+        rippleRing.style.cssText = `position:fixed;width:20px;height:20px;border:1px solid rgba(186,192,149,0.55);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);opacity:0;`
         document.body.appendChild(rippleRing)
 
         document.addEventListener('mouseenter', () => { pageSpotlight.style.opacity='1'; gsap.to(rippleRing,{opacity:1,duration:0.3}) })
@@ -741,61 +769,46 @@
             gsap.to(rippleRing,{left:e.clientX,top:e.clientY,duration:0.15,ease:'power2.out'})
         })
         document.querySelectorAll('a,button,.hero-img,.footer-social,.skill-card,.hero-stat').forEach(el => {
-            el.addEventListener('mouseenter', () => gsap.to(rippleRing,{width:50,height:50,borderColor:'rgba(255,90,48,0.9)',borderWidth:'1.5px',duration:0.25,ease:'power2.out'}))
-            el.addEventListener('mouseleave', () => gsap.to(rippleRing,{width:20,height:20,borderColor:'rgba(255,90,48,0.6)',borderWidth:'1px',duration:0.25,ease:'power2.out'}))
+            el.addEventListener('mouseenter', () => gsap.to(rippleRing,{width:50,height:50,borderColor:'rgba(186,192,149,0.9)',borderWidth:'1.5px',duration:0.25,ease:'power2.out'}))
+            el.addEventListener('mouseleave', () => gsap.to(rippleRing,{width:20,height:20,borderColor:'rgba(186,192,149,0.55)',borderWidth:'1px',duration:0.25,ease:'power2.out'}))
         })
 
-        // Click burst (global)
         document.addEventListener('click', e => {
             for(let i=0;i<8;i++){
                 const b=document.createElement('div'),ang=(i/8)*360,d=40+Math.random()*30
-                b.style.cssText=`position:fixed;width:3px;height:3px;border-radius:50%;background:#ff5a30;pointer-events:none;z-index:9999;left:${e.clientX}px;top:${e.clientY}px;transform:translate(-50%,-50%);`
+                b.style.cssText=`position:fixed;width:3px;height:3px;border-radius:50%;background:#BAC095;pointer-events:none;z-index:9999;left:${e.clientX}px;top:${e.clientY}px;transform:translate(-50%,-50%);`
                 document.body.appendChild(b)
                 gsap.to(b,{x:Math.cos(ang*Math.PI/180)*d,y:Math.sin(ang*Math.PI/180)*d,opacity:0,scale:0,duration:0.5+Math.random()*0.3,ease:'power2.out',onComplete:()=>b.remove()})
             }
         })
 
         // ═══════════════════════════════════════
-        // HEADER — glass blur on scroll + hide/show on direction
+        // HEADER
         // ═══════════════════════════════════════
         const header = document.getElementById('main-header')
         let lastScrollY = 0
-
         window.addEventListener('scroll', () => {
             const y = window.scrollY
             if (y > 40) header.classList.add('scrolled')
             else header.classList.remove('scrolled')
-
-            if (y > lastScrollY + 6 && y > 100) {
-                gsap.to(header, { y: -100, duration: 0.4, ease: 'power2.inOut' })
-            } else if (y < lastScrollY - 6) {
-                gsap.to(header, { y: 0, duration: 0.4, ease: 'power2.out' })
-            }
+            if (y > lastScrollY + 6 && y > 100) gsap.to(header,{y:-100,duration:0.4,ease:'power2.inOut'})
+            else if (y < lastScrollY - 6) gsap.to(header,{y:0,duration:0.4,ease:'power2.out'})
             lastScrollY = y
         })
 
-        // Hamburger → X + mobile menu slide (CSS grid-rows transition, no GSAP conflict)
         const burgerBtn = document.getElementById('burger-btn')
         const mobileMenu = document.getElementById('mobile-menu')
         let menuOpen = false
-
         burgerBtn.addEventListener('click', () => {
             menuOpen = !menuOpen
             burgerBtn.classList.toggle('menu-open', menuOpen)
             mobileMenu.classList.toggle('open', menuOpen)
             burgerBtn.setAttribute('aria-expanded', menuOpen)
-
-            // Stagger links in when opening — only animate opacity/x, let CSS handle height
             if (menuOpen) {
                 const links = mobileMenu.querySelectorAll('.mobile-link')
-                gsap.fromTo(links,
-                    { opacity: 0, x: -16 },
-                    { opacity: 1, x: 0, duration: 0.28, stagger: 0.06, ease: 'power2.out', delay: 0.1 }
-                )
+                gsap.fromTo(links,{opacity:0,x:-16},{opacity:1,x:0,duration:0.28,stagger:0.06,ease:'power2.out',delay:0.1})
             }
         })
-
-        // Close menu when a mobile link is tapped
         mobileMenu.querySelectorAll('.mobile-link').forEach(link => {
             link.addEventListener('click', () => {
                 menuOpen = false
@@ -805,7 +818,6 @@
             })
         })
 
-        // Nav links — magnetic pull
         document.querySelectorAll('.nav-links-item').forEach(link => {
             link.addEventListener('mousemove', e => {
                 const r=link.getBoundingClientRect()
@@ -815,113 +827,70 @@
         })
 
         // ═══════════════════════════════════════
-        // LOADER — simple & funny
+        // LOADER — clean & minimal
         // ═══════════════════════════════════════
         ;(function initLoader() {
-            const loader  = document.getElementById('loader')
-            const emoji   = document.getElementById('loader-emoji')
-            const msgEl   = document.getElementById('loader-msg')
-            const bar     = document.getElementById('loader-bar')
-            const numEl   = document.getElementById('loader-num')
+            const loader   = document.getElementById('loader')
+            const name     = document.getElementById('loader-name')
+            const rule     = document.getElementById('loader-rule')
+            const role     = document.getElementById('loader-role')
+            const progress = document.getElementById('loader-progress')
 
-            const jokes = [
-                'warming up the coffee machine...',
-                'bribing the CSS to behave...',
-                'Googling "how to center a div"...',
-                'deleting node_modules (again)...',
-                'telling PHP it is loved...',
-                'closing 47 Stack Overflow tabs...',
-                'running npm install for the 9th time...',
-                'pushing to main (yolo)...',
-                'hiding the console.logs...',
-                'it works on my machine™...',
-            ]
+            const tl = gsap.timeline()
 
-            const emojis = ['👨‍💻','🤔','😅','☕','🚀','😎','🔥','✨','💀','🎉']
-
-            // Bounce the emoji
-            gsap.to(emoji, {
-                y: -18, duration: 0.45,
-                repeat: -1, yoyo: true,
-                ease: 'power1.inOut'
+            // 1. Name fades + rises in
+            tl.to(name, {
+                opacity: 1, y: 0, duration: 0.9, ease: 'power3.out'
             })
 
-            // Cycle through jokes + matching emojis
-            let step = 0
-            const totalSteps = jokes.length
-            const stepDuration = 2200 / totalSteps  // total ~2.2s
+            // 2. Rule expands from centre
+            tl.to(rule, {
+                width: 'clamp(120px, 30vw, 220px)',
+                duration: 0.7, ease: 'power2.inOut'
+            }, '-=0.35')
 
-            function nextStep() {
-                if (step >= totalSteps) return
-                // Fade out current message
-                gsap.to(msgEl, {
-                    opacity: 0, y: -6, duration: 0.18, ease: 'power2.in',
-                    onComplete: () => {
-                        msgEl.textContent = jokes[step]
-                        emoji.textContent = emojis[step]
-                        gsap.to(msgEl, { opacity: 1, y: 0, duration: 0.22, ease: 'power2.out' })
-                        step++
-                        bar.style.width = (step / totalSteps * 100) + '%'
-                        numEl.textContent = Math.round(step / totalSteps * 100)
-                        if (step < totalSteps) setTimeout(nextStep, stepDuration)
-                        else setTimeout(exitLoader, stepDuration)
-                    }
-                })
-            }
+            // 3. Role label fades in
+            tl.to(role, {
+                opacity: 1, duration: 0.5, ease: 'power2.out'
+            }, '-=0.25')
 
-            // Kick off after a brief pause
-            setTimeout(nextStep, 300)
+            // 4. Progress bar crawls across bottom (simulated load)
+            tl.to(progress, {
+                width: '100%', duration: 1.2, ease: 'power1.inOut'
+            }, '-=0.1')
 
-            function exitLoader() {
-                // Final message + tada
-                gsap.to(msgEl, { opacity: 0, duration: 0.15, onComplete: () => {
-                    msgEl.textContent = 'ok let\'s go 🚀'
-                    gsap.to(msgEl, { opacity: 1, duration: 0.2 })
-                }})
-                emoji.textContent = '🎉'
-                gsap.fromTo(emoji,
-                    { scale: 1 },
-                    { scale: 1.5, duration: 0.2, yoyo: true, repeat: 1, ease: 'back.out(2)',
-                      onComplete: () => {
-                        gsap.to(loader, {
-                            opacity: 0, duration: 0.5, delay: 0.3, ease: 'power2.in',
-                            onComplete: () => {
-                                loader.remove()
-                                document.body.classList.remove('loading')
-                                runPageTimeline()
-                            }
-                        })
-                    }}
-                )
-            }
+            // 5. Brief pause so it lands, then fade out everything
+            tl.to([name, rule, role], {
+                opacity: 0, y: -12, duration: 0.5, ease: 'power2.in', stagger: 0.06
+            }, '+=0.15')
+
+            tl.to(loader, {
+                opacity: 0, duration: 0.45, ease: 'power2.in',
+                onComplete: () => {
+                    loader.remove()
+                    document.body.classList.remove('loading')
+                    runPageTimeline()
+                }
+            }, '-=0.2')
         })()
 
         function runPageTimeline() {
-        // ═══════════════════════════════════════
-        // PAGE LOAD STAGGER TIMELINE
-        // ═══════════════════════════════════════
-        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
-        tl.from('.nav-brand',      {opacity:0,y:-28,duration:0.6})
-        tl.from('.nav-links-item', {opacity:0,y:-18,duration:0.4,stagger:0.1}, '-=0.3')
-        tl.from('.hero-eyebrow',   {opacity:0,y:20,scale:0.88,duration:0.5}, '-=0.1')
-        tl.from('.hero-heading',   {opacity:0,y:44,duration:0.7}, '-=0.2')
-        tl.from('.hero-sub',       {opacity:0,y:30,duration:0.55}, '-=0.35')
-        tl.from('.hero-btn',       {opacity:0,y:20,duration:0.4}, '-=0.3')
-        tl.from('.hero-btn-2',     {opacity:0,y:20,duration:0.4}, '-=0.3')
-        tl.from('.hero-stat',      {opacity:0,y:20,duration:0.4,stagger:0.1}, '-=0.25')
-        tl.from('.hero-img',       {opacity:0,x:56,duration:0.85}, '-=0.95')
+            const tl = gsap.timeline({ defaults:{ease:'power3.out'} })
+            tl.from('.nav-brand',      {opacity:0,y:-28,duration:0.6})
+            tl.from('.nav-links-item', {opacity:0,y:-18,duration:0.4,stagger:0.1},'-=0.3')
+            tl.from('.hero-eyebrow',   {opacity:0,y:20,scale:0.88,duration:0.5},'-=0.1')
+            tl.from('.hero-heading',   {opacity:0,y:44,duration:0.7},'-=0.2')
+            tl.from('.hero-sub',       {opacity:0,y:30,duration:0.55},'-=0.35')
+            tl.from('.hero-btn',       {opacity:0,y:20,duration:0.4},'-=0.3')
+            tl.from('.hero-btn-2',     {opacity:0,y:20,duration:0.4},'-=0.3')
+            tl.from('.hero-stat',      {opacity:0,y:20,duration:0.4,stagger:0.1},'-=0.25')
+            tl.from('.hero-img',       {opacity:0,x:56,duration:0.85},'-=0.95')
         }
 
-        // ═══════════════════════════════════════
-        // HERO ORBS — ambient drift
-        // ═══════════════════════════════════════
         document.querySelectorAll('.hero-bg-orb').forEach((orb,i) => {
             gsap.to(orb,{x:'random(-50,50)',y:'random(-50,50)',duration:7+i*2,repeat:-1,yoyo:true,ease:'sine.inOut'})
         })
 
-        // ═══════════════════════════════════════
-        // HERO — heading expand on hover
-        // ═══════════════════════════════════════
         const heroHeading = document.querySelector('.hero-heading')
         heroHeading.addEventListener('mouseenter', () => {
             gsap.to('.hero-heading',{letterSpacing:'0.04em',duration:0.4,ease:'power2.out'})
@@ -932,7 +901,6 @@
             gsap.to('.hero-heading span:first-child',{x:0,duration:0.4,ease:'power2.inOut'})
         })
 
-        // HERO IMAGE — 3D tilt + click confetti
         const imgWrapper = document.querySelector('.hero-img')
         imgWrapper.addEventListener('mousemove', e => {
             const r=imgWrapper.getBoundingClientRect()
@@ -940,7 +908,7 @@
         })
         imgWrapper.addEventListener('mouseleave', () => gsap.to(imgWrapper,{rotateX:0,rotateY:0,y:0,scale:1,duration:0.6,ease:'elastic.out(1,0.4)'}))
         imgWrapper.addEventListener('click', () => {
-            const colors=['#ff5a30','#ffffff','#f7df1e','#38bdf8','#a855f7']
+            const colors=['#BAC095','#363532','#f7df1e','#38bdf8','#a855f7']
             const r=imgWrapper.getBoundingClientRect()
             for(let i=0;i<22;i++){
                 const c=document.createElement('div')
@@ -950,48 +918,37 @@
             }
         })
 
-        // HERO BUTTONS — shake + scale
         const heroBtn = document.querySelector('.hero-btn')
         heroBtn.addEventListener('mouseenter', () => {
             gsap.fromTo(heroBtn,{x:-3},{x:3,duration:0.08,repeat:4,yoyo:true,ease:'none',onComplete:()=>gsap.set(heroBtn,{x:0})})
             gsap.to(heroBtn,{scale:1.07,duration:0.2,ease:'power2.out'})
         })
         heroBtn.addEventListener('mouseleave', () => gsap.to(heroBtn,{scale:1,duration:0.3,ease:'power2.inOut'}))
-
         const heroBtn2 = document.querySelector('.hero-btn-2')
         heroBtn2.addEventListener('mouseenter', () => gsap.to(heroBtn2,{scale:1.05,duration:0.2,ease:'power2.out'}))
         heroBtn2.addEventListener('mouseleave', () => gsap.to(heroBtn2,{scale:1,duration:0.3,ease:'power2.inOut'}))
 
-        // HERO SUB — brighten on hover
         document.querySelector('.hero-sub').addEventListener('mouseenter', () => gsap.to('.hero-sub',{opacity:1,y:-4,duration:0.3,ease:'power2.out'}))
         document.querySelector('.hero-sub').addEventListener('mouseleave', () => gsap.to('.hero-sub',{opacity:0.55,y:0,duration:0.3,ease:'power2.in'}))
 
-        // HERO STATS — counter on scroll enter
         document.querySelectorAll('.stat-num').forEach(el => {
             const target=parseInt(el.dataset.target)
-            ScrollTrigger.create({
-                trigger:el, start:'top 92%',
-                onEnter:() => gsap.to({v:0},{v:target,duration:1.6,ease:'power2.out',onUpdate:function(){el.textContent=Math.round(this.targets()[0].v)+'+'}})
-            })
+            ScrollTrigger.create({trigger:el,start:'top 92%',onEnter:()=>gsap.to({v:0},{v:target,duration:1.6,ease:'power2.out',onUpdate:function(){el.textContent=Math.round(this.targets()[0].v)+'+'}})})
         })
-
-        // HERO STAT — bounce on hover
         document.querySelectorAll('.hero-stat').forEach(stat => {
             stat.addEventListener('mouseenter', () => gsap.to(stat,{y:-6,scale:1.08,duration:0.25,ease:'back.out(2)'}))
             stat.addEventListener('mouseleave', () => gsap.to(stat,{y:0,scale:1,duration:0.4,ease:'elastic.out(1,0.4)'}))
         })
 
-        // ═══════════════════════════════════════
-        // BRAND SCRAMBLE (nav + footer)
-        // ═══════════════════════════════════════
+        // ─── BRAND SCRAMBLE ───
         const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
         function scramble(el,splitIndex,iv){
             const txt=el.innerText; let iters=0; clearInterval(iv)
             iv=setInterval(()=>{
                 el.innerHTML=txt.split('').map((ch,i)=>{
                     if(ch===' ') return ' '
-                    if(i<iters) return `<span class="${i>=splitIndex?'text-[#ff5a30]':'text-white'}">${txt[i]}</span>`
-                    return `<span class="${i>=splitIndex?'text-[#ff5a30]':'text-white'}">${chars[Math.floor(Math.random()*chars.length)]}</span>`
+                    if(i<iters) return `<span style="color:${i>=splitIndex?'#BAC095':'var(--text-primary)'}">${txt[i]}</span>`
+                    return `<span style="color:${i>=splitIndex?'#BAC095':'var(--text-primary)'}">${chars[Math.floor(Math.random()*chars.length)]}</span>`
                 }).join('')
                 iters+=0.5; if(iters>=txt.length) clearInterval(iv)
             },40); return iv
@@ -1002,32 +959,26 @@
             gsap.to('#brand-underline',{width:'100%',duration:0.4,ease:'power2.out'})
         })
         navBrandEl.addEventListener('mouseleave',()=>{
-            clearInterval(navSc); navBrandEl.innerHTML=`PORT<span class="text-[#ff5a30]">folio</span>`
+            clearInterval(navSc); navBrandEl.innerHTML=`PORT<span style="color:#BAC095;">folio</span>`
             gsap.to('#brand-underline',{width:'0%',duration:0.3,ease:'power2.in'})
         })
         const ftBrandEl=document.querySelector('.footer-brand'); let ftSc
         ftBrandEl.addEventListener('mouseenter',()=>{ ftSc=scramble(ftBrandEl,6,ftSc) })
-        ftBrandEl.addEventListener('mouseleave',()=>{ clearInterval(ftSc); ftBrandEl.innerHTML=`SYDNEY<span class="text-[#ff5a30]">2026</span>` })
+        ftBrandEl.addEventListener('mouseleave',()=>{ clearInterval(ftSc); ftBrandEl.innerHTML=`SYDNEY<span style="color:#BAC095;">2026</span>` })
 
-        // ═══════════════════════════════════════
-        // SKILLS — scroll reveal + all card FX
-        // ═══════════════════════════════════════
-        gsap.from('.skills-heading',{ scrollTrigger:{trigger:'#skills',start:'top 80%'}, opacity:0,y:30,duration:0.6,ease:'power3.out' })
-        gsap.from('.section-label', { scrollTrigger:{trigger:'#skills',start:'top 80%'}, opacity:0,x:-20,duration:0.5,ease:'power3.out' })
+        // ─── SKILLS ───
+        gsap.from('.skills-heading',{scrollTrigger:{trigger:'#skills',start:'top 80%'},opacity:0,y:30,duration:0.6,ease:'power3.out'})
+        gsap.from('.section-label',{scrollTrigger:{trigger:'#skills',start:'top 80%'},opacity:0,x:-20,duration:0.5,ease:'power3.out'})
 
         gsap.utils.toArray('.skill-card').forEach((card,i) => {
-            gsap.to(card,{
-                scrollTrigger:{trigger:card,start:'top 85%'},
-                opacity:1,y:0,duration:0.75,delay:i*0.15,ease:'power3.out',
-                onComplete:()=>{ animateBar(card); startIdleOrb(card) }
-            })
+            gsap.to(card,{scrollTrigger:{trigger:card,start:'top 85%'},opacity:1,y:0,duration:0.75,delay:i*0.15,ease:'power3.out',onComplete:()=>{animateBar(card);startIdleOrb(card)}})
         })
 
         function animateBar(card){
             const fill=card.querySelector('.prof-fill'), pctEl=card.querySelector('.prof-pct')
             if(!fill||!pctEl) return
             const target=parseInt(fill.dataset.width); fill.style.width=target+'%'
-            let cur=0; const step=()=>{ cur=Math.min(cur+1,target); pctEl.textContent=cur+'%'; if(cur<target) requestAnimationFrame(step) }
+            let cur=0; const step=()=>{cur=Math.min(cur+1,target);pctEl.textContent=cur+'%';if(cur<target)requestAnimationFrame(step)}
             requestAnimationFrame(step)
         }
         function startIdleOrb(card){
@@ -1036,7 +987,6 @@
         }
 
         document.querySelectorAll('.skill-card').forEach(card => {
-            // 3D tilt
             card.addEventListener('mousemove', e => {
                 const r=card.getBoundingClientRect()
                 gsap.to(card,{rotateX:((e.clientY-(r.top+r.height/2))/(r.height/2))*-10,rotateY:((e.clientX-(r.left+r.width/2))/(r.width/2))*10,transformPerspective:900,duration:0.25,ease:'power2.out'})
@@ -1058,7 +1008,7 @@
             card.addEventListener('click', e => {
                 for(let i=0;i<12;i++){
                     const p=document.createElement('div'),ang=(i/12)*360,d=55+Math.random()*40
-                    p.style.cssText=`position:fixed;width:${2+Math.random()*3}px;height:${2+Math.random()*3}px;border-radius:50%;background:#ff5a30;pointer-events:none;z-index:9999;left:${e.clientX}px;top:${e.clientY}px;transform:translate(-50%,-50%);`
+                    p.style.cssText=`position:fixed;width:${2+Math.random()*3}px;height:${2+Math.random()*3}px;border-radius:50%;background:#BAC095;pointer-events:none;z-index:9999;left:${e.clientX}px;top:${e.clientY}px;transform:translate(-50%,-50%);`
                     document.body.appendChild(p)
                     gsap.to(p,{x:Math.cos(ang*Math.PI/180)*d,y:Math.sin(ang*Math.PI/180)*d,opacity:0,scale:0,duration:0.6+Math.random()*0.3,ease:'power2.out',onComplete:()=>p.remove()})
                 }
@@ -1069,44 +1019,36 @@
             const r=card.getBoundingClientRect()
             for(let i=0;i<8;i++){
                 const p=document.createElement('div')
-                p.style.cssText=`position:fixed;width:3px;height:3px;border-radius:50%;background:#ff5a30;opacity:0.7;pointer-events:none;z-index:9998;left:${r.left+Math.random()*r.width}px;top:${r.top+r.height*0.7+Math.random()*r.height*0.3}px;`
+                p.style.cssText=`position:fixed;width:3px;height:3px;border-radius:50%;background:#BAC095;opacity:0.7;pointer-events:none;z-index:9998;left:${r.left+Math.random()*r.width}px;top:${r.top+r.height*0.7+Math.random()*r.height*0.3}px;`
                 document.body.appendChild(p)
                 gsap.to(p,{y:-(80+Math.random()*60),x:(Math.random()-0.5)*40,opacity:0,scale:0,duration:0.9+Math.random()*0.5,delay:Math.random()*0.3,ease:'power1.out',onComplete:()=>p.remove()})
             }
         }
 
-        // ═══════════════════════════════════════
-        // FOOTER — all effects
-        // ═══════════════════════════════════════
+        // ─── FOOTER ───
+        const marqueeEl=document.getElementById('footer-marquee')
+        const marqueeWrap=document.querySelector('.footer-marquee-wrap')
+        marqueeWrap.addEventListener('mouseenter',()=>marqueeEl.style.animationDuration='6s')
+        marqueeWrap.addEventListener('mouseleave',()=>marqueeEl.style.animationDuration='18s')
 
-        // Marquee hover speed-up
-        const marqueeEl = document.getElementById('footer-marquee')
-        const marqueeWrap = document.querySelector('.footer-marquee-wrap')
-        marqueeWrap.addEventListener('mouseenter', () => marqueeEl.style.animationDuration='6s')
-        marqueeWrap.addEventListener('mouseleave', () => marqueeEl.style.animationDuration='18s')
+        const divider=document.querySelector('.footer-divider-line')
+        ScrollTrigger.create({trigger:divider,start:'top 95%',onEnter:()=>divider.classList.add('visible')})
 
-        // Divider line draw on scroll
-        const divider = document.querySelector('.footer-divider-line')
-        ScrollTrigger.create({ trigger:divider, start:'top 95%', onEnter:()=>divider.classList.add('visible') })
+        gsap.from('.footer-brand',{scrollTrigger:{trigger:'.footer-brand',start:'top 92%'},opacity:0,x:-40,duration:0.7,ease:'power3.out'})
+        gsap.from('.footer-link', {scrollTrigger:{trigger:'.footer-link',start:'top 92%'},opacity:0,y:16,duration:0.4,stagger:0.07,ease:'power3.out'})
+        gsap.from('.footer-copy', {scrollTrigger:{trigger:'.footer-copy',start:'top 97%'},opacity:0,y:10,duration:0.4,ease:'power3.out'})
 
-        // Footer scroll reveals
-        gsap.from('.footer-brand',{ scrollTrigger:{trigger:'.footer-brand',start:'top 92%'}, opacity:0,x:-40,duration:0.7,ease:'power3.out' })
-        gsap.from('.footer-link', { scrollTrigger:{trigger:'.footer-link',start:'top 92%'},  opacity:0,y:16,duration:0.4,stagger:0.07,ease:'power3.out' })
-        gsap.from('.footer-copy', { scrollTrigger:{trigger:'.footer-copy',start:'top 97%'},  opacity:0,y:10,duration:0.4,ease:'power3.out' })
-
-        // Footer links — magnetic
         document.querySelectorAll('.footer-link').forEach(link => {
             link.addEventListener('mousemove', e => {
                 const r=link.getBoundingClientRect()
                 gsap.to(link,{x:(e.clientX-(r.left+r.width/2))*0.4,y:(e.clientY-(r.top+r.height/2))*0.4,duration:0.2,ease:'power2.out'})
             })
-            link.addEventListener('mouseleave', () => gsap.to(link,{x:0,y:0,duration:0.5,ease:'elastic.out(1,0.4)'}))
+            link.addEventListener('mouseleave',()=>gsap.to(link,{x:0,y:0,duration:0.5,ease:'elastic.out(1,0.4)'}))
         })
 
-        // Footer spotlight
         const footer=document.querySelector('footer')
         const ftSpot=document.createElement('div')
-        ftSpot.style.cssText=`position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(255,90,48,0.07) 0%,transparent 70%);pointer-events:none;transform:translate(-50%,-50%);opacity:0;z-index:0;transition:opacity 0.4s;`
+        ftSpot.style.cssText=`position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(186,192,149,0.06) 0%,transparent 70%);pointer-events:none;transform:translate(-50%,-50%);opacity:0;z-index:0;transition:opacity 0.4s;`
         footer.appendChild(ftSpot)
         footer.addEventListener('mouseenter',()=>{ftSpot.style.opacity='1'})
         footer.addEventListener('mouseleave',()=>{ftSpot.style.opacity='0'})
@@ -1115,42 +1057,35 @@
             gsap.to(ftSpot,{left:e.clientX-r.left,top:e.clientY-r.top,duration:0.5,ease:'power2.out'})
         })
 
-        // Social icons — scroll entrance + idle float + hover explode
-        gsap.from('.footer-social',{ scrollTrigger:{trigger:'.footer-social',start:'top 95%'}, opacity:0,y:30,scale:0.5,duration:0.5,stagger:0.1,ease:'back.out(1.7)' })
+        gsap.from('.footer-social',{scrollTrigger:{trigger:'.footer-social',start:'top 95%'},opacity:0,y:30,scale:0.5,duration:0.5,stagger:0.1,ease:'back.out(1.7)'})
 
         document.querySelectorAll('.footer-social').forEach((icon,idx) => {
             icon.style.position='relative'
             gsap.to(icon,{y:-6,duration:1.4+idx*0.25,repeat:-1,yoyo:true,ease:'sine.inOut',delay:idx*0.3})
-
-            icon.addEventListener('mouseenter', () => {
+            icon.addEventListener('mouseenter',()=>{
                 gsap.killTweensOf(icon)
                 gsap.to(icon,{scale:1.5,rotate:360,duration:0.45,ease:'back.out(1.7)'})
-                gsap.to(icon,{filter:'drop-shadow(0 0 14px #ff5a30)',duration:0.3})
-                // Ripple rings
+                gsap.to(icon,{filter:'drop-shadow(0 0 14px #BAC095)',duration:0.3})
                 for(let r=0;r<2;r++){
                     const ring=document.createElement('div')
-                    ring.style.cssText=`position:absolute;inset:-${6+r*10}px;border-radius:50%;border:1px solid rgba(255,90,48,${0.5-r*0.15});pointer-events:none;`
+                    ring.style.cssText=`position:absolute;inset:-${6+r*10}px;border-radius:50%;border:1px solid rgba(186,192,149,${0.5-r*0.15});pointer-events:none;`
                     icon.appendChild(ring)
                     gsap.fromTo(ring,{scale:0.7,opacity:0.8},{scale:1.6,opacity:0,duration:0.6+r*0.15,delay:r*0.1,ease:'power2.out',onComplete:()=>ring.remove()})
                 }
-                // Burst particles
                 for(let i=0;i<8;i++){
                     const p=document.createElement('div'),ang=(i/8)*360,d=32+Math.random()*20
-                    p.style.cssText=`position:absolute;width:4px;height:4px;border-radius:50%;background:#ff5a30;pointer-events:none;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;`
+                    p.style.cssText=`position:absolute;width:4px;height:4px;border-radius:50%;background:#BAC095;pointer-events:none;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;`
                     icon.appendChild(p)
                     gsap.to(p,{x:Math.cos(ang*Math.PI/180)*d,y:Math.sin(ang*Math.PI/180)*d,opacity:0,scale:0,duration:0.6,ease:'power2.out',onComplete:()=>p.remove()})
                 }
             })
-            icon.addEventListener('mouseleave', () => {
+            icon.addEventListener('mouseleave',()=>{
                 gsap.to(icon,{scale:1,rotate:0,filter:'drop-shadow(0 0 0px transparent)',duration:0.5,ease:'elastic.out(1,0.4)',
-                    onComplete:()=>gsap.to(icon,{y:-6,duration:1.4+idx*0.25,repeat:-1,yoyo:true,ease:'sine.inOut'})
-                })
+                    onComplete:()=>gsap.to(icon,{y:-6,duration:1.4+idx*0.25,repeat:-1,yoyo:true,ease:'sine.inOut'})})
             })
         })
 
-        // ═══════════════════════════════════════
-        // THEME TOGGLE
-        // ═══════════════════════════════════════
+        // ─── THEME TOGGLE ───
         const toggleBtn=document.getElementById('theme-toggle')
         const toggleThumb=document.getElementById('toggle-thumb')
         let isLight=false
@@ -1158,7 +1093,7 @@
         function toggleBurst(x,y){
             for(let i=0;i<14;i++){
                 const p=document.createElement('div'),ang=(i/14)*360,d=55+Math.random()*35
-                p.style.cssText=`position:fixed;width:${Math.random()*5+2}px;height:${Math.random()*5+2}px;border-radius:50%;background:#ff5a30;pointer-events:none;z-index:99999;left:${x}px;top:${y}px;transform:translate(-50%,-50%);`
+                p.style.cssText=`position:fixed;width:${Math.random()*5+2}px;height:${Math.random()*5+2}px;border-radius:50%;background:#BAC095;pointer-events:none;z-index:99999;left:${x}px;top:${y}px;transform:translate(-50%,-50%);`
                 document.body.appendChild(p)
                 gsap.to(p,{x:Math.cos(ang*Math.PI/180)*d,y:Math.sin(ang*Math.PI/180)*d,opacity:0,scale:0,duration:0.6+Math.random()*0.3,ease:'power2.out',onComplete:()=>p.remove()})
             }
@@ -1166,17 +1101,11 @@
 
         function flashTransition(toLight){
             const flash=document.createElement('div')
-            flash.style.cssText=`position:fixed;inset:0;background:${toLight?'#f5f5f0':'#0a0a0a'};z-index:99998;pointer-events:none;opacity:0;`
+            flash.style.cssText=`position:fixed;inset:0;background:#fcf8f2;z-index:99998;pointer-events:none;opacity:0;`
             document.body.appendChild(flash)
             gsap.timeline()
                 .to(flash,{opacity:1,duration:0.2,ease:'power2.in'})
-                .to(flash,{opacity:0,duration:0.45,ease:'power2.out',
-                    onStart:()=>{
-                        if(toLight){document.body.classList.add('light');pageSpotlight.style.background='radial-gradient(circle,rgba(255,90,48,0.06) 0%,transparent 70%)'}
-                        else{document.body.classList.remove('light');pageSpotlight.style.background='radial-gradient(circle,rgba(255,90,48,0.04) 0%,transparent 70%)'}
-                    },
-                    onComplete:()=>flash.remove()
-                })
+                .to(flash,{opacity:0,duration:0.45,ease:'power2.out',onComplete:()=>flash.remove()})
         }
 
         toggleBtn.addEventListener('click',()=>{
@@ -1188,7 +1117,7 @@
             })
             toggleBurst(r.left+r.width/2,r.top+r.height/2)
             flashTransition(isLight)
-            gsap.fromTo(toggleBtn,{boxShadow:'0 0 0px rgba(255,90,48,0)'},{boxShadow:'0 0 22px rgba(255,90,48,0.55)',duration:0.3,yoyo:true,repeat:1,ease:'power2.out'})
+            gsap.fromTo(toggleBtn,{boxShadow:'0 0 0px rgba(186,192,149,0)'},{boxShadow:'0 0 22px rgba(186,192,149,0.55)',duration:0.3,yoyo:true,repeat:1,ease:'power2.out'})
         })
         toggleBtn.addEventListener('mouseenter',()=>gsap.to(toggleBtn,{scale:1.12,duration:0.2,ease:'power2.out'}))
         toggleBtn.addEventListener('mouseleave',()=>gsap.to(toggleBtn,{scale:1,duration:0.3,ease:'elastic.out(1,0.4)'}))
